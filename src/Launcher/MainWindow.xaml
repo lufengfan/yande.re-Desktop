@@ -1,0 +1,28 @@
+﻿<Window x:Class="Launcher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Launcher"
+        xmlns:ctrlib="clr-namespace:Launcher.Controls;assembly=Launcher.ctrlib"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        Background="Transparent" AllowsTransparency="True" WindowStyle="None"
+        Height="350" Width="525"
+        Template="{DynamicResource WindowControlTemplate}">
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <WrapPanel x:Name="wp" Orientation="Horizontal" HorizontalAlignment="Stretch"
+                       Background="#FF1F1F1F"
+                       Loaded="wp_Loaded">
+                <WrapPanel.Resources>
+                    <Style TargetType="ctrlib:PostThumb" x:Key="VerticalOrientedPostThumbStyle">
+                        <Setter Property="Height" Value="160"/>
+                        <Setter Property="Background" Value="#1FFFFFFF"/>
+                        <Setter Property="Margin" Value="8,10"/>
+                    </Style>
+                </WrapPanel.Resources>
+            </WrapPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>
