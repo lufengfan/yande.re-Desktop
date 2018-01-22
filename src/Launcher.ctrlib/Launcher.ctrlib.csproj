@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{0A8DC47F-8926-4C7E-A5AD-B192FF146C1C}</ProjectGuid>
     <OutputType>library</OutputType>
-    <RootNamespace>Launcher.ctrlib</RootNamespace>
+    <RootNamespace>Launcher</RootNamespace>
     <AssemblyName>Launcher.ctrlib</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Launcher.ctrlib.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Launcher.ctrlib.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -51,13 +53,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Controls\ChamferPanel.cs" />
+    <Compile Include="CornerSize.cs" />
+    <Compile Include="CornerSizeConverter.cs" />
+    <Compile Include="Data\ChamferClipConverter.cs" />
     <Compile Include="Data\FilletClipConverter.cs" />
-    <Compile Include="FilletPanel.cs">
+    <Compile Include="Controls\FilletPanel.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PostThumb.cs" />
+    <Compile Include="Controls\PostThumb.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

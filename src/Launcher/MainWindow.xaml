@@ -11,7 +11,19 @@
         Height="350" Width="525"
         Template="{DynamicResource WindowControlTemplate}">
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Label x:Name="TitleRect" Grid.Row="0"
+               Height="30"
+               VerticalContentAlignment="Center"
+               Foreground="Gray" FontSize="16"
+               Background="#FF1F1F1F"
+               Content="Content"
+               MouseDown="TitleRect_MouseDown"></Label>
+        
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <WrapPanel x:Name="wp" Orientation="Horizontal" HorizontalAlignment="Stretch"
                        Background="#FF1F1F1F"
                        Loaded="wp_Loaded">
@@ -20,6 +32,7 @@
                         <Setter Property="Height" Value="160"/>
                         <Setter Property="Background" Value="#1FFFFFFF"/>
                         <Setter Property="Margin" Value="8,10"/>
+                        <Setter Property="CornerRadius" Value="5"></Setter>
                     </Style>
                 </WrapPanel.Resources>
             </WrapPanel>

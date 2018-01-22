@@ -28,6 +28,12 @@ namespace Launcher
             InitializeComponent();
         }
 
+        private void TitleRect_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+                this.DragMove();
+        }
+
         private void wp_Loaded(object sender, RoutedEventArgs e)
         {
             PostSearchProcess process = new PostSearchProcess();
@@ -48,7 +54,7 @@ namespace Launcher
                 }
                 this.Dispatcher.BeginInvoke(new Action<Lazy<YanderePostPreview>>(addPostThumb), post);
                 i++;
-                if (i == 50) break;
+                if (i == 15) break;
             }
         }
     }

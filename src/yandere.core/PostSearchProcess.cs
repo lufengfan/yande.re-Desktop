@@ -85,7 +85,9 @@ namespace Yandere
                         Match postIDMatch = postIDRegex.Match(listItem.Id);
                         Match sizeMatch = sizeRegex.Match(
                             listItem.Elements("a")
-                                .First(a => a.HasClass("directlink") && a.HasClass("largeimg"))
+                                .First(a =>
+                                    a.HasClass("directlink")// && a.HasClass("largeimg")
+                                )
                                 .Elements("span")
                                 .First(span => span.HasClass("directlink-res"))
                                 .InnerText

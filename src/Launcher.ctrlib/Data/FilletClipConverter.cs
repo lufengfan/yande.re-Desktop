@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Launcher.Controls;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace Launcher.Controls.Data
+namespace Launcher.Data
 {
     public class FilletClipConverter : IMultiValueConverter
     {
@@ -26,8 +27,8 @@ namespace Launcher.Controls.Data
             }
             catch (Exception)
             {
-                actualHeight = 160;
-                actualWidth = 240;
+                actualHeight = 0.0;
+                actualWidth = 0.0;
                 cornerRadius = (CornerRadius)FilletPanel.CornerRadiusProperty.DefaultMetadata.DefaultValue;
             }
 
