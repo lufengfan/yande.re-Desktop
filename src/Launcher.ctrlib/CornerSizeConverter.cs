@@ -74,7 +74,7 @@ namespace Launcher
                 return CornerSizeConverter.ToString(cs, culture);
             else if (destinationType == typeof(InstanceDescriptor))
             {
-                ConstructorInfo constructor = typeof(CornerRadius)
+                ConstructorInfo constructor = typeof(CornerSize)
                     .GetConstructor(new Type[]
                     {
                         typeof(Size),
@@ -92,7 +92,7 @@ namespace Launcher
                 });
             }
             else
-                throw new ArgumentException($"无法自类型 {{{typeof(CornerSize)}}} 转化为类型 {{{destinationType}}} 。");
+                throw new ArgumentException($"无法自类型 {{{typeof(CornerSize)}}} 转换为类型 {{{destinationType}}} 。");
         }
 
         internal static CornerSize FromString(string s, CultureInfo cultureInfo)

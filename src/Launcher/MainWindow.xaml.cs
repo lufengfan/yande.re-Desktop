@@ -21,7 +21,7 @@ namespace Launcher
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : DropShadowWindow
     {
         public MainWindow()
         {
@@ -36,6 +36,7 @@ namespace Launcher
 
         private void wp_Loaded(object sender, RoutedEventArgs e)
         {
+            return;
             PostSearchProcess process = new PostSearchProcess();
             var posts = process.Search();
             int i = 0;
@@ -54,7 +55,7 @@ namespace Launcher
                 }
                 this.Dispatcher.BeginInvoke(new Action<Lazy<YanderePostPreview>>(addPostThumb), post);
                 i++;
-                if (i == 15) break;
+                if (i == 5) break;
             }
         }
     }

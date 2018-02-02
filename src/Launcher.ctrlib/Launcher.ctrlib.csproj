@@ -53,10 +53,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Collections\ObjectModel\SpecificPartCollection.cs" />
     <Compile Include="Controls\ChamferPanel.cs" />
+    <Compile Include="Controls\CustomizedWindow.cs" />
+    <Compile Include="Controls\DropShadowWindow.cs" />
+    <Compile Include="Controls\StretchHelper.cs" />
+    <Compile Include="Controls\StretchMode.cs" />
+    <Compile Include="Controls\WindowResizeDirection.cs" />
     <Compile Include="CornerSize.cs" />
     <Compile Include="CornerSizeConverter.cs" />
     <Compile Include="Data\ChamferClipConverter.cs" />
+    <Compile Include="Data\DoubleToGridLengthConverter.cs" />
+    <Compile Include="Data\DoubleToThicknessConverter.cs" />
     <Compile Include="Data\FilletClipConverter.cs" />
     <Compile Include="Controls\FilletPanel.cs">
       <SubType>Code</SubType>
@@ -64,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\PostThumb.cs" />
+    <Compile Include="Data\StretchHelperConverters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
