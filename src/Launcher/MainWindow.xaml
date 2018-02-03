@@ -7,10 +7,11 @@
         xmlns:ctrlib="clr-namespace:Launcher.Controls;assembly=Launcher.ctrlib"
         mc:Ignorable="d"
         Title="yande.re"
+        AllowsTransparency="True" WindowStyle="None"
         Background="Transparent"
         BorderBrush="Green" BorderThickness="1"
         Height="500" Width="1000"
-        BlurRadius="10"
+        BlurRadius="10" DropShadowColor="Green"
         ResizeMode="CanResizeWithGrip">
     <Grid
             Background="#FF2F2F2F">

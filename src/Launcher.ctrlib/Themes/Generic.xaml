@@ -101,12 +101,15 @@
                             <ColumnDefinition Width="{TemplateBinding Converter={StaticResource DoubleToGridLengthConverter}, Property=BlurRadius}"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
 
-                        <Rectangle></Rectangle>
+                        <Rectangle Grid.Row="0" Grid.Column="0"
+                                local:CustomizedWindow.CustomizedWindowAncestor="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                                local:CustomizedWindow.IsWindowNorthWestResizeAreaPart="True"/>
 
-                        <Border Grid.Row="1" Grid.Column="1"
+                        <Border x:Name="WindowBorder"
+                            Grid.Row="1" Grid.Column="1"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            x:Name="WindowBorder" Margin="10">
+                            Margin="{TemplateBinding Converter={StaticResource DoubleToThicknessConverter}, Property=BlurRadius}">
                             <Border.Effect>
                                 <DropShadowEffect ShadowDepth="0"
                                         Color="{TemplateBinding BorderBrush}"
