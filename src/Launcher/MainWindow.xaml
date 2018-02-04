@@ -9,10 +9,10 @@
         Title="yande.re"
         AllowsTransparency="True" WindowStyle="None"
         Background="Transparent"
-        BorderBrush="Green" BorderThickness="1"
+        BorderBrush="LightBlue" BorderThickness="1"
         Height="500" Width="1000"
-        BlurRadius="10" DropShadowColor="Green"
-        ResizeMode="CanResizeWithGrip">
+        MinWidth="600" MinHeight="300"
+        BlurRadius="5" DropShadowColor="LightBlue">
     <Grid
             Background="#FF2F2F2F">
         <Grid.RowDefinitions>
@@ -27,7 +27,7 @@
                 ctrlib:CustomizedWindow.CustomizedWindowAncestor="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Mode=OneWay}"
                 ctrlib:CustomizedWindow.IsWindowTitleAreaPart="True"/>
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Visibility="Visible">
             <WrapPanel x:Name="wp" Orientation="Horizontal" HorizontalAlignment="Stretch"
                        Loaded="wp_Loaded">
                 <WrapPanel.Resources>
@@ -39,17 +39,16 @@
                     </Style>
                 </WrapPanel.Resources>
 
+                <ctrlib:FilletPanel Height="auto" CornerRadius="20">
+                </ctrlib:FilletPanel>
                 <ctrlib:FilletPanel Height="400">
                     <Image Source="http://118.89.163.154:3399/h/ec8d746346d437bc7969512e77e3549936fac1c3-123083-1280-853-jpg/keystamp=1516631700-f854c92725;fileindex=48084091;xres=1280/PTBM005_264.jpg"></Image>
                 </ctrlib:FilletPanel>
                 <ctrlib:ChamferPanel Height="400" CornerSize="10">
-                    <Image Source="http://1.161.185.62:3690/h/40757d5ecd3028e83e3fd624d156d85ca6f7ab25-268425-1280-1920-jpg/keystamp=1516632000-53b0d32d45;fileindex=48084090;xres=1280/PTBM005_263.jpg"></Image>
                 </ctrlib:ChamferPanel>
                 <ctrlib:FilletPanel Height="400">
-                    <Image Source="http://111.242.204.75:1024/h/635a01682f193db1197eb3c01895368f37321c36-144620-1280-1920-jpg/keystamp=1516632300-113bae01c7;fileindex=48084068;xres=1280/PTBM005_241.jpg"></Image>
                 </ctrlib:FilletPanel>
                 <ctrlib:FilletPanel Height="400">
-                    <Image Source="http://172.104.67.218:1025/h/59825fc98785c0b656980d83c049c7fff66fea20-119801-1280-853-jpg/keystamp=1516632600-77c2565258;fileindex=55457166;xres=1280/meg_0242.jpg"></Image>
                 </ctrlib:FilletPanel>
             </WrapPanel>
         </ScrollViewer>

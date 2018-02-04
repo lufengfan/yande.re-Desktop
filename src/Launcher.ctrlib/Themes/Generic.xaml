@@ -4,6 +4,7 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:local="clr-namespace:Launcher.Controls"
     xmlns:converters="clr-namespace:Launcher.Data">
+    
     <Style TargetType="{x:Type local:PostThumb}">
         <Setter Property="Template">
             <Setter.Value>
@@ -72,12 +73,15 @@
         </Setter>
     </Style>
 
+    <ContextMenu x:Key="CutomizedWindow_WindowTitleAreaContextMenu">
+        
+    </ContextMenu>
     <Style TargetType="local:CustomizedWindow">
         <Setter Property="AllowsTransparency" Value="True"/>
         <Setter Property="WindowStyle" Value="None"/>
+        <Setter Property="WindowTitleAreaContextMenu" Value="{StaticResource CutomizedWindow_WindowTitleAreaContextMenu}"/>
     </Style>
     
-    <system:Double x:Key="WindowCaptionHeight">40.0</system:Double>
     <converters:DoubleToThicknessConverter x:Key="DoubleToThicknessConverter"/>
     <converters:DoubleToGridLengthConverter x:Key="DoubleToGridLengthConverter"/>
     <Style TargetType="{x:Type local:DropShadowWindow}">
@@ -100,19 +104,37 @@
                             <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition Width="{TemplateBinding Converter={StaticResource DoubleToGridLengthConverter}, Property=BlurRadius}"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-
-                        <Rectangle Grid.Row="0" Grid.Column="0"
-                                local:CustomizedWindow.CustomizedWindowAncestor="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                        <Grid.Resources>
+                            <Style TargetType="Rectangle">
+                                <Setter Property="local:CustomizedWindow.CustomizedWindowAncestor" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+                                <Setter Property="Fill" Value="#01000000"/>
+                            </Style>
+                        </Grid.Resources>
+                        
+                        <Rectangle x:Name="WindowNorthResizeRect" Grid.Row="0" Grid.Column="1"
+                                local:CustomizedWindow.IsWindowNorthResizeAreaPart="True"/>
+                        <Rectangle x:Name="WindowSouthResizeRect" Grid.Row="2" Grid.Column="1"
+                                local:CustomizedWindow.IsWindowSouthResizeAreaPart="True"/>
+                        <Rectangle x:Name="WindowWestResizeRect" Grid.Row="1" Grid.Column="0"
+                                local:CustomizedWindow.IsWindowWestResizeAreaPart="True"/>
+                        <Rectangle x:Name="WindowEastResizeRect" Grid.Row="1" Grid.Column="2"
+                                local:CustomizedWindow.IsWindowEastResizeAreaPart="True"/>
+                        <Rectangle x:Name="WindowNorthWestResizeRect" Grid.Row="0" Grid.Column="0"
                                 local:CustomizedWindow.IsWindowNorthWestResizeAreaPart="True"/>
+                        <Rectangle x:Name="WindowNorthEastResizeRect" Grid.Row="0" Grid.Column="2"
+                                local:CustomizedWindow.IsWindowNorthEastResizeAreaPart="True"/>
+                        <Rectangle x:Name="WindowSouthEastResizeRect" Grid.Row="2" Grid.Column="2"
+                                local:CustomizedWindow.IsWindowSouthEastResizeAreaPart="True"/>
+                        <Rectangle x:Name="WindowSouthWestResizeRect" Grid.Row="2" Grid.Column="0"
+                                local:CustomizedWindow.IsWindowSouthWestResizeAreaPart="True"/>
 
                         <Border x:Name="WindowBorder"
                             Grid.Row="1" Grid.Column="1"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            Margin="{TemplateBinding Converter={StaticResource DoubleToThicknessConverter}, Property=BlurRadius}">
+                            BorderThickness="{TemplateBinding BorderThickness}">
                             <Border.Effect>
                                 <DropShadowEffect ShadowDepth="0"
-                                        Color="{TemplateBinding BorderBrush}"
+                                        Color="{TemplateBinding DropShadowColor}"
                                         BlurRadius="{TemplateBinding BlurRadius}"/>
                             </Border.Effect>
 
@@ -124,7 +146,7 @@
                                         ContentTemplate="{TemplateBinding ContentTemplate}"
                                         KeyboardNavigation.TabNavigation="Cycle" />
                                 </AdornerDecorator>
-                                
+
                                 <ResizeGrip x:Name="ResizeGrip"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Bottom"

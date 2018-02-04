@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -125,6 +127,22 @@ namespace Launcher.Controls
             element.SetValue(CustomizedWindowAncestorProperty, value);
         #endregion
 
+        #region WindowTitleAreaContextMenu
+        /// <summary>
+        /// 标识 <see cref="WindowTitleAreaContextMenu"/> 依赖属性。
+        /// </summary>
+        public static readonly DependencyProperty WindowTitleAreaContextMenuProperty =
+            DependencyProperty.Register(nameof(WindowTitleAreaContextMenu), typeof(ContextMenu), typeof(CustomizedWindow), new PropertyMetadata(null));
+
+        /// <summary>
+        /// 获取或设置鼠标指针位于窗体标题区域时可调出的上下文菜单。
+        /// </summary>
+        public ContextMenu WindowTitleAreaContextMenu
+        {
+            get => (ContextMenu)GetValue(WindowTitleAreaContextMenuProperty);
+            set => SetValue(WindowTitleAreaContextMenuProperty, value);
+        }
+        #endregion
 
 
         #region WindowTitleArea Properties
@@ -5087,9 +5105,21 @@ namespace Launcher.Controls
             this.PreviewMouseRightButtonUp += this.CustomizedWindow_PreviewMouseRightButtonUp;
             this.PreviewMouseMove += this.CustomizedWindow_PreviewMouseMove;
             this.PreviewMouseWheel += this.CustomizedWindow_PreviewMouseWheel;
-            
+            // 获得供与Win32互操作所需的源
+            this.SourceInitialized += (sender,e)=>this.hwndSource = PresentationSource.FromVisual((Visual)sender) as System.Windows.Interop.HwndSource;
+
+            this.WindowTitleAreaMouseDoubleClick += this.CustomizedWindow_WindowTitleAreaMouseDoubleClick;
             this.WindowTitleAreaMouseMove += this.CustomizedWindow_WindowTitleAreaMouseMove;
             this.WindowTitleAreaMouseLeftButtonDown += this.CustomizedWindow_WindowTitleAreaMouseLeftButtonDown;
+            // 添加窗体向各个方向缩放区域的响应事件。
+            this.WindowNorthResizeAreaMouseLeftButtonDown += (sender, e) => this.Window_Resize(WindowResizeDirection.North);
+            this.WindowSouthResizeAreaMouseLeftButtonDown += (sender, e) => this.Window_Resize(WindowResizeDirection.South);
+            this.WindowWestResizeAreaMouseLeftButtonDown += (sender, e) => this.Window_Resize(WindowResizeDirection.West);
+            this.WindowEastResizeAreaMouseLeftButtonDown += (sender, e) => this.Window_Resize(WindowResizeDirection.East);
+            this.WindowNorthWestResizeAreaMouseLeftButtonDown += (sender, e) => this.Window_Resize(WindowResizeDirection.NorthWest);
+            this.WindowNorthEastResizeAreaMouseLeftButtonDown += (sender, e) => this.Window_Resize(WindowResizeDirection.NorthEast);
+            this.WindowSouthEastResizeAreaMouseLeftButtonDown += (sender, e) => this.Window_Resize(WindowResizeDirection.SouthEast);
+            this.WindowSouthWestResizeAreaMouseLeftButtonDown += (sender, e) => this.Window_Resize(WindowResizeDirection.SouthWest);
         }
 
         #region RedirectingEventHandlers
@@ -5488,8 +5518,7 @@ namespace Launcher.Controls
                         RoutedEvent = CustomizedWindow.WindowTitleAreaMouseLeftButtonDownEvent
                     }
                 );
-
-            if (this.WindowResizeAreaContains(mousePosition, out WindowResizeDirection direction))
+            else if (this.WindowResizeAreaContains(mousePosition, out WindowResizeDirection direction) && this.IsWindowResizeAreaMouseWithin)
             {
                 this.RaiseEvent(
                     new MouseButtonEventArgs(e.MouseDevice, e.Timestamp, e.ChangedButton, e.StylusDevice)
@@ -5570,7 +5599,7 @@ namespace Launcher.Controls
         private void CustomizedWindow_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             Point mousePosition = e.GetPosition(this);
-            
+
             if (this.WindowTitleAreaContains(mousePosition))
                 this.RaiseEvent(
                     new MouseButtonEventArgs(e.MouseDevice, e.Timestamp, e.ChangedButton, e.StylusDevice)
@@ -5578,8 +5607,7 @@ namespace Launcher.Controls
                         RoutedEvent = CustomizedWindow.WindowTitleAreaMouseLeftButtonUpEvent
                     }
                 );
-
-            if (this.WindowResizeAreaContains(mousePosition, out WindowResizeDirection direction))
+            else if (this.WindowResizeAreaContains(mousePosition, out WindowResizeDirection direction))
             {
                 this.RaiseEvent(
                     new MouseButtonEventArgs(e.MouseDevice, e.Timestamp, e.ChangedButton, e.StylusDevice)
@@ -7110,6 +7138,13 @@ namespace Launcher.Controls
         }
         #endregion
 
+
+        /// <summary>
+        /// 获取一个值，指示指定点是否在窗体缩放区域内。
+        /// </summary>
+        /// <param name="mousePosition">要检测的点。</param>
+        /// <param name="direction">如果指定的点在窗体缩放区域内，则返回对应的方向。</param>
+        /// <returns>指定的点在窗体缩放区域内，则返回 <see langword="true"/> ；否则为 <see langword="false"/> 。</returns>
         protected internal virtual bool WindowResizeAreaContains(Point mousePosition, out WindowResizeDirection direction)
         {
             // 检测点是否在向各个方向的可视化元素集合或形状表示的范围内。
@@ -7243,6 +7278,19 @@ namespace Launcher.Controls
             Mouse.OverrideCursor = cursor;
         }
 
+        private void CustomizedWindow_WindowTitleAreaMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            switch (this.WindowState)
+            {
+                case WindowState.Maximized:
+                    this.WindowState = WindowState.Normal;
+                    break;
+                case WindowState.Normal:
+                    this.WindowState = WindowState.Maximized;
+                    break;
+            }
+        }
+
         private void CustomizedWindow_WindowTitleAreaMouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed && this.WindowState == WindowState.Maximized)
@@ -7260,5 +7308,24 @@ namespace Launcher.Controls
                 this.DragMove();
         }
 
+        #region 改变窗体大小
+        private System.Windows.Interop.HwndSource hwndSource;
+
+        /// <summary>
+        /// 该函数将指定的消息发送到一个或多个窗口。此函数为指定的窗口调用窗口程序，直到窗口程序处理完消息再返回。
+        /// </summary>
+        /// <param name="hWnd">其窗口程序将接收消息的窗口的句柄。如果此参数为 HWND_BROADCAST(0xFFFF) ，则消息将被发送到系统中所有顶层窗口，包括无效或不可见的非自身拥有的窗口、被覆盖的窗口和弹出式窗口，但消息不被发送到子窗口。</param>
+        /// <param name="message">指定被发送的消息</param>
+        /// <param name="wParam">指定附加的消息特定信息。</param>
+        /// <param name="lParam">指定附加的消息特定信息。</param>
+        /// <returns>返回值指定消息处理的结果，依赖于所发送的消息。</returns>
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr SendMessage(IntPtr hWnd, uint message, IntPtr wParam, IntPtr lParam);
+
+        private void Window_Resize(WindowResizeDirection direction)
+        {
+            SendMessage(this.hwndSource.Handle, 0x0112, (IntPtr)(0xF000 + direction), IntPtr.Zero);
+        }
+        #endregion
     }
 }
