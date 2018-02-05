@@ -7147,88 +7147,92 @@ namespace Launcher.Controls
         /// <returns>指定的点在窗体缩放区域内，则返回 <see langword="true"/> ；否则为 <see langword="false"/> 。</returns>
         protected internal virtual bool WindowResizeAreaContains(Point mousePosition, out WindowResizeDirection direction)
         {
-            // 检测点是否在向各个方向的可视化元素集合或形状表示的范围内。
-            if (this.WindowNorthResizeAreaContains(mousePosition))
+            // 如果调整大小模式不为 NoResize 且窗体状态为 Normal ，则判定点是否在窗体缩放区域内；否则不予判定。
+            if (this.ResizeMode != ResizeMode.NoResize && this.WindowState == WindowState.Normal)
             {
-                direction = WindowResizeDirection.North;
-                return true;
-            }
-            else if (this.WindowSouthResizeAreaContains(mousePosition))
-            {
-                direction = WindowResizeDirection.South;
-                return true;
-            }
-            else if (this.WindowWestResizeAreaContains(mousePosition))
-            {
-                direction = WindowResizeDirection.West;
-                return true;
-            }
-            else if (this.WindowEastResizeAreaContains(mousePosition))
-            {
-                direction = WindowResizeDirection.East;
-                return true;
-            }
-            else if (this.WindowNorthWestResizeAreaContains(mousePosition))
-            {
-                direction = WindowResizeDirection.NorthWest;
-                return true;
-            }
-            else if (this.WindowNorthEastResizeAreaContains(mousePosition))
-            {
-                direction = WindowResizeDirection.NorthEast;
-                return true;
-            }
-            else if (this.WindowSouthEastResizeAreaContains(mousePosition))
-            {
-                direction = WindowResizeDirection.SouthEast;
-                return true;
-            }
-            else if (this.WindowSouthWestResizeAreaContains(mousePosition))
-            {
-                direction = WindowResizeDirection.SouthWest;
-                return true;
-            }
+                // 检测点是否在向各个方向的可视化元素集合或形状表示的范围内。
+                if (this.WindowNorthResizeAreaContains(mousePosition))
+                {
+                    direction = WindowResizeDirection.North;
+                    return true;
+                }
+                else if (this.WindowSouthResizeAreaContains(mousePosition))
+                {
+                    direction = WindowResizeDirection.South;
+                    return true;
+                }
+                else if (this.WindowWestResizeAreaContains(mousePosition))
+                {
+                    direction = WindowResizeDirection.West;
+                    return true;
+                }
+                else if (this.WindowEastResizeAreaContains(mousePosition))
+                {
+                    direction = WindowResizeDirection.East;
+                    return true;
+                }
+                else if (this.WindowNorthWestResizeAreaContains(mousePosition))
+                {
+                    direction = WindowResizeDirection.NorthWest;
+                    return true;
+                }
+                else if (this.WindowNorthEastResizeAreaContains(mousePosition))
+                {
+                    direction = WindowResizeDirection.NorthEast;
+                    return true;
+                }
+                else if (this.WindowSouthEastResizeAreaContains(mousePosition))
+                {
+                    direction = WindowResizeDirection.SouthEast;
+                    return true;
+                }
+                else if (this.WindowSouthWestResizeAreaContains(mousePosition))
+                {
+                    direction = WindowResizeDirection.SouthWest;
+                    return true;
+                }
 
-            // 检测点是否在向各个方向的窗体缩放边界宽度表示的范围内。
-            if (this.WindowNorthResizeBorderAreaContains(mousePosition))
-            {
-                direction = WindowResizeDirection.North;
-                return true;
-            }
-            else if (this.WindowSouthResizeBorderAreaContains(mousePosition))
-            {
-                direction = WindowResizeDirection.South;
-                return true;
-            }
-            else if (this.WindowWestResizeBorderAreaContains(mousePosition))
-            {
-                direction = WindowResizeDirection.West;
-                return true;
-            }
-            else if (this.WindowEastResizeBorderAreaContains(mousePosition))
-            {
-                direction = WindowResizeDirection.East;
-                return true;
-            }
-            else if (this.WindowNorthWestResizeBorderAreaContains(mousePosition))
-            {
-                direction = WindowResizeDirection.NorthWest;
-                return true;
-            }
-            else if (this.WindowNorthEastResizeBorderAreaContains(mousePosition))
-            {
-                direction = WindowResizeDirection.NorthEast;
-                return true;
-            }
-            else if (this.WindowSouthEastResizeBorderAreaContains(mousePosition))
-            {
-                direction = WindowResizeDirection.SouthEast;
-                return true;
-            }
-            else if (this.WindowSouthWestResizeBorderAreaContains(mousePosition))
-            {
-                direction = WindowResizeDirection.SouthWest;
-                return true;
+                // 检测点是否在向各个方向的窗体缩放边界宽度表示的范围内。
+                if (this.WindowNorthResizeBorderAreaContains(mousePosition))
+                {
+                    direction = WindowResizeDirection.North;
+                    return true;
+                }
+                else if (this.WindowSouthResizeBorderAreaContains(mousePosition))
+                {
+                    direction = WindowResizeDirection.South;
+                    return true;
+                }
+                else if (this.WindowWestResizeBorderAreaContains(mousePosition))
+                {
+                    direction = WindowResizeDirection.West;
+                    return true;
+                }
+                else if (this.WindowEastResizeBorderAreaContains(mousePosition))
+                {
+                    direction = WindowResizeDirection.East;
+                    return true;
+                }
+                else if (this.WindowNorthWestResizeBorderAreaContains(mousePosition))
+                {
+                    direction = WindowResizeDirection.NorthWest;
+                    return true;
+                }
+                else if (this.WindowNorthEastResizeBorderAreaContains(mousePosition))
+                {
+                    direction = WindowResizeDirection.NorthEast;
+                    return true;
+                }
+                else if (this.WindowSouthEastResizeBorderAreaContains(mousePosition))
+                {
+                    direction = WindowResizeDirection.SouthEast;
+                    return true;
+                }
+                else if (this.WindowSouthWestResizeBorderAreaContains(mousePosition))
+                {
+                    direction = WindowResizeDirection.SouthWest;
+                    return true;
+                }
             }
 
             // 点不在窗体缩放区域内。
@@ -7278,6 +7282,85 @@ namespace Launcher.Controls
             Mouse.OverrideCursor = cursor;
         }
 
+        #region ReconsiderWindowPosition
+        /// <summary>
+        /// 拖动窗体从最大化切换至还原时重设鼠标指针相对于窗体左上角的坐标。
+        /// </summary>
+        /// <param name="point">当窗体在最大化时鼠标指针在标题栏范围内左键按下时的坐标。</param>
+        /// <returns>重设的鼠标指针相对于窗体左上角的坐标。</returns>
+        /// <remarks>
+        /// 内部实现时调用 <see cref="ReconsiderWindowPositionInternal(Point, CustomizedWindow.ReconsiderWindowPositionPreserveCallback, CustomizedWindow.ReconsiderWindowPositionTransformCallback)"/> ，其参数为 <see cref="ReconsiderWindowPosition_PreserveCallback"/> 和 <see cref="ReconsiderWindowPosition_TransformCallback(object)"/> 。
+        /// </remarks>
+        /// <seealso cref="ReconsiderWindowPositionInternal(Point, ReconsiderWindowPositionPreserveCallback, ReconsiderWindowPositionTransformCallback)"/>
+        /// <seealso cref="ReconsiderWindowPosition_PreserveCallback"/>
+        /// <seealso cref="ReconsiderWindowPosition_TransformCallback(object)"/>
+        protected virtual Point ReconsiderWindowPosition(Point point) =>
+            this.ReconsiderWindowPositionInternal(point, this.ReconsiderWindowPosition_PreserveCallback, this.ReconsiderWindowPosition_TransformCallback);
+
+        /// <summary>
+        /// 为 <see cref="ReconsiderWindowPositionInternal(Point, ReconsiderWindowPositionPreserveCallback, ReconsiderWindowPositionTransformCallback)"/> 提供获取保留数据的回调函数。
+        /// </summary>
+        /// <param name="point">当窗体在最大化时鼠标指针在标题栏范围内左键按下时的坐标。</param>
+        /// <returns>保留数据。</returns>
+        public delegate dynamic ReconsiderWindowPositionPreserveCallback(Point point);
+        /// <summary>
+        /// 为 <see cref="ReconsiderWindowPositionInternal(Point, ReconsiderWindowPositionPreserveCallback, ReconsiderWindowPositionTransformCallback)"/> 提供获取变换后坐标的回调函数。
+        /// </summary>
+        /// <param name="preservedObj">保留数据。</param>
+        /// <returns>变换后坐标。</returns>
+        public delegate Point ReconsiderWindowPositionTransformCallback(dynamic preservedObj);
+
+        /// <summary>
+        /// 拖动窗体从最大化切换至还原时重设鼠标指针相对于窗体左上角的坐标。
+        /// </summary>
+        /// <param name="point">当窗体在最大化时鼠标指针在标题栏范围内左键按下时的坐标。</param>
+        /// <param name="preserveCallback">获取保留数据的回调函数。</param>
+        /// <param name="transformCallback">获取变换后坐标的回调函数。</param>
+        /// <returns>重设的鼠标指针相对于窗体左上角的坐标。</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="preserveCallback"/> 的值为 <see langword="null"/> 。</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="transformCallback"/> 的值为 <see langword="null"/> 。</exception>
+        protected internal Point ReconsiderWindowPositionInternal(Point point, ReconsiderWindowPositionPreserveCallback preserveCallback, ReconsiderWindowPositionTransformCallback transformCallback)
+        {
+            if (preserveCallback == null) throw new ArgumentNullException(nameof(preserveCallback));
+            if (transformCallback == null) throw new ArgumentNullException(nameof(transformCallback));
+
+            object preservedObj = preserveCallback(point);
+            this.WindowState = WindowState.Normal;
+
+            return transformCallback(preservedObj);
+        }
+
+        /// <summary>
+        /// <see cref="ReconsiderWindowPositionInternal(Point, ReconsiderWindowPositionPreserveCallback, ReconsiderWindowPositionTransformCallback)"/> 的获取保留数据的回调函数。
+        /// </summary>
+        /// <param name="point">当窗体在最大化时鼠标指针在标题栏范围内左键按下时的坐标。</param>
+        /// <returns>保留数据。</returns>
+        protected virtual dynamic ReconsiderWindowPosition_PreserveCallback(Point point)
+        {
+            return new
+            {
+                Point = point,
+                Width = this.ActualWidth,
+                Height = this.ActualHeight,
+                Left = this.Left,
+                Top = this.Top
+            };
+        }
+
+        /// <summary>
+        /// <see cref="ReconsiderWindowPositionInternal(Point, ReconsiderWindowPositionPreserveCallback, ReconsiderWindowPositionTransformCallback)"/> 的获取变换后坐标的回调函数。
+        /// </summary>
+        /// <param name="preservedObj">保留数据。</param>
+        /// <returns>变换后坐标。</returns>
+        protected virtual Point ReconsiderWindowPosition_TransformCallback(dynamic preservedObj)
+        {
+            double horizontalRatio = preservedObj.Point.X / preservedObj.Width;
+            double verticalRatio = preservedObj.Point.Y / preservedObj.Height;
+
+            return new Point(this.Width * horizontalRatio, this.Height * verticalRatio);
+        }
+        #endregion
+
         private void CustomizedWindow_WindowTitleAreaMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             switch (this.WindowState)
@@ -7295,7 +7378,24 @@ namespace Launcher.Controls
         {
             if (e.LeftButton == MouseButtonState.Pressed && this.WindowState == WindowState.Maximized)
             {
-                this.WindowState = WindowState.Normal;
+                // 获取切换前鼠标指针相对于窗体的坐标。
+                Point mousePosition = e.GetPosition(this);
+                // 获取切换前鼠标指针相对于屏幕的坐标。
+                Point mousePositionToScreen = this.PointToScreen(mousePosition);
+
+                // 重设鼠标指针相对于窗体的位置。
+                Point reconsideredMousePosition = this.ReconsiderWindowPosition(mousePosition);
+
+                // 获取切换后鼠标相对于窗体的坐标。
+                //Point newMousePosition = e.GetPosition(this);
+                Point windowPosition = this.PointToScreen(new Point(0, 0));
+                Point newMousePosition = new Point(mousePositionToScreen.X - windowPosition.X, mousePositionToScreen.Y - windowPosition.Y);
+
+                Point newWindowPosition = windowPosition + (newMousePosition - reconsideredMousePosition);
+                this.Left = newWindowPosition.X;
+                this.Top = newWindowPosition.Y;
+
+                // 进入拖动窗体动作。
                 this.DragMove();
             }
         }
