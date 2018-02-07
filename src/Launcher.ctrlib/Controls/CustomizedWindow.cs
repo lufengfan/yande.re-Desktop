@@ -5071,7 +5071,15 @@ namespace Launcher.Controls
 
         static CustomizedWindow()
         {
-
+            FrameworkPropertyMetadata metadata = WindowStyleProperty.GetMetadata(typeof(CustomizedWindow)) as FrameworkPropertyMetadata;
+            WindowStyleProperty.OverrideMetadata(
+                typeof(CustomizedWindow),
+                new FrameworkPropertyMetadata(
+                    WindowStyle.None,
+                    metadata.PropertyChangedCallback,
+                    metadata.CoerceValueCallback
+                )
+            );
         }
 
         /// <summary>
@@ -5111,6 +5119,7 @@ namespace Launcher.Controls
             this.WindowTitleAreaMouseDoubleClick += this.CustomizedWindow_WindowTitleAreaMouseDoubleClick;
             this.WindowTitleAreaMouseMove += this.CustomizedWindow_WindowTitleAreaMouseMove;
             this.WindowTitleAreaMouseLeftButtonDown += this.CustomizedWindow_WindowTitleAreaMouseLeftButtonDown;
+            this.WindowTitleAreaMouseRightButtonUp += this.CustomizedWindow_WindowTitleAreaMouseRightButtonUp;
             // 添加窗体向各个方向缩放区域的响应事件。
             this.WindowNorthResizeAreaMouseLeftButtonDown += (sender, e) => this.Window_Resize(WindowResizeDirection.North);
             this.WindowSouthResizeAreaMouseLeftButtonDown += (sender, e) => this.Window_Resize(WindowResizeDirection.South);
@@ -7363,14 +7372,17 @@ namespace Launcher.Controls
 
         private void CustomizedWindow_WindowTitleAreaMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            switch (this.WindowState)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
-                case WindowState.Maximized:
-                    this.WindowState = WindowState.Normal;
-                    break;
-                case WindowState.Normal:
-                    this.WindowState = WindowState.Maximized;
-                    break;
+                switch (this.WindowState)
+                {
+                    case WindowState.Maximized:
+                        this.WindowState = WindowState.Normal;
+                        break;
+                    case WindowState.Normal:
+                        this.WindowState = WindowState.Maximized;
+                        break;
+                }
             }
         }
 
@@ -7406,6 +7418,12 @@ namespace Launcher.Controls
 
             if (this.WindowTitleAreaContains(e.GetPosition(this)))
                 this.DragMove();
+        }
+
+        private void CustomizedWindow_WindowTitleAreaMouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (this.WindowTitleAreaContextMenu != null)
+                this.WindowTitleAreaContextMenu.IsOpen = true;
         }
 
         #region 改变窗体大小

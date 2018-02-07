@@ -56,7 +56,7 @@ namespace Launcher.Controls
 
         private void InitializeComponent()
         {
-
+            
         }
     }
 }

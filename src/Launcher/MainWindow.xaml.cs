@@ -58,5 +58,25 @@ namespace Launcher
                 if (i == 5) break;
             }
         }
+
+        private void MinimizeCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (this.WindowState != WindowState.Minimized && this.ResizeMode != ResizeMode.NoResize)
+                e.CanExecute = true;
+        }
+
+        private void MinimizeCommand_Executed(object sender, ExecutedRoutedEventArgs e) => this.WindowState = WindowState.Minimized;
+
+        private void MaximizeCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (this.WindowState != WindowState.Maximized && (this.ResizeMode == ResizeMode.CanResize || this.ResizeMode == ResizeMode.CanResizeWithGrip))
+                e.CanExecute = true;
+        }
+
+        private void MaximizeCommand_Executed(object sender, ExecutedRoutedEventArgs e) => this.WindowState = WindowState.Maximized;
+
+        private void NormalCommand_Executed(object sender, ExecutedRoutedEventArgs e) => this.WindowState = WindowState.Normal;
+
+        private void CloseCommand_Executed(object sender, ExecutedRoutedEventArgs e) => this.Close();
     }
 }
