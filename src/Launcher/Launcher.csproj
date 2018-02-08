@@ -69,6 +69,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FullScreenManager.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -109,6 +110,10 @@
     <ProjectReference Include="..\yandere.core\yandere.core.csproj">
       <Project>{e3c7f663-4279-427a-a5d2-e64c1b575783}</Project>
       <Name>yandere.core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\yandere.Utilities\yandere.Utilities.csproj">
+      <Project>{30be79e1-b797-4737-a2f9-25d96939e874}</Project>
+      <Name>yandere.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,7 @@ using System.Windows.Data;
 
 namespace Launcher.Data
 {
-    internal class DoubleToGridLengthConverter : IValueConverter
+    internal sealed class DoubleToGridLengthConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -26,6 +26,8 @@ namespace Launcher
         public MainWindow()
         {
             InitializeComponent();
+
+            FullScreenManager.RepairWpfWindowFullScreenBehavior(this);
         }
 
         private void TitleRect_MouseDown(object sender, MouseButtonEventArgs e)

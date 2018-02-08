@@ -3,7 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:local="clr-namespace:Launcher.Controls"
-    xmlns:converters="clr-namespace:Launcher.Data">
+    xmlns:converters="clr-namespace:Launcher.Data"
+    xmlns:bindingcodedom="clr-namespace:Launcher.Data.BindingCodeDom">
     
     <Style TargetType="{x:Type local:PostThumb}">
         <Setter Property="Template">
@@ -72,23 +73,162 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <ContextMenu x:Key="CutomizedWindow_WindowTitleAreaContextMenu">
-        <MenuItem Header="还原(_R)"/>
-        <MenuItem Header="移动(_M)"/>
-        <MenuItem Header="大小(_S)"/>
-        <MenuItem Header="最大化(_R)"/>
-        <MenuItem Header="最小化(_R)"/>
-        <Separator/>
-        <MenuItem Header="关闭(_C)"
-                Command="ApplicationCommands.Close"/>
-    </ContextMenu>
+    
     <Style TargetType="local:CustomizedWindow">
-        <Setter Property="WindowTitleAreaContextMenu" Value="{StaticResource CutomizedWindow_WindowTitleAreaContextMenu}"/>
+        <Setter Property="WindowTitleAreaContextMenu">
+            <Setter.Value>
+                <ContextMenu>
+                    <MenuItem Header="还原(_R)"/>
+                    <MenuItem Header="移动(_M)"/>
+                    <MenuItem Header="大小(_S)"/>
+                    <MenuItem Header="最大化(_R)"/>
+                    <MenuItem Header="最小化(_R)"/>
+                    <Separator/>
+                    <MenuItem Header="关闭(_C)"
+                Command="ApplicationCommands.Close"/>
+                </ContextMenu>
+            </Setter.Value>
+        </Setter>
     </Style>
     
     <converters:DoubleToThicknessConverter x:Key="DoubleToThicknessConverter"/>
     <converters:DoubleToGridLengthConverter x:Key="DoubleToGridLengthConverter"/>
+    <bindingcodedom:DoubleToGridLengthBindingCodeDomConverter x:Key="DoubleToGridLengthBindingCodeDomConverter"/>
+    <bindingcodedom:DoubleToThicknessBindingCodeDomConverter x:Key="DoubleToThicknessBindingCodeDomConverter"/>
+    <bindingcodedom:ColorToSolidColorBrushBindingCodeDomConverter x:Key="ColorToSolidColorBrushBindingCodeDomConverter"/>
+    <bindingcodedom:BindingCodeDomConverter x:Key="BindingCodeDomConverter"/>
+
+    <bindingcodedom:BindingCodeDomConverterParameter x:Key="BindingCodeDomConverterParameter_BlurRadius">
+        <!--
+        <x:Code>
+            <![CDATA[
+                // 代码逻辑：
+                if (values[0] == WindowState.Normal)
+                    ;
+                else
+                {
+                    #pop 1
+                    #push [double] 0.0
+                }
+            ]]>
+        </x:Code>
+        -->
+        <bindingcodedom:BindingCodeDomLogicalConditionBranch>
+            <bindingcodedom:BindingCodeDomLogicalConditionBranch.Condition>
+                <bindingcodedom:BindingCodeDomEqualityBinaryOperation>
+                    <bindingcodedom:BindingCodeDomEqualityBinaryOperation.RightObject>
+                        <bindingcodedom:BindingCodeDomPrimitiveValue>
+                            <WindowState>Normal</WindowState>
+                        </bindingcodedom:BindingCodeDomPrimitiveValue>
+                    </bindingcodedom:BindingCodeDomEqualityBinaryOperation.RightObject>
+                </bindingcodedom:BindingCodeDomEqualityBinaryOperation>
+            </bindingcodedom:BindingCodeDomLogicalConditionBranch.Condition>
+
+            <bindingcodedom:BindingCodeDomLogicalConditionBranch.TrueCondition>
+                <bindingcodedom:BindingCodeDomDoNothing/>
+            </bindingcodedom:BindingCodeDomLogicalConditionBranch.TrueCondition>
+            <bindingcodedom:BindingCodeDomLogicalConditionBranch.FalseCondition>
+                <bindingcodedom:BindingCodeDomObjectGroup>
+                    <bindingcodedom:BindingCodeDomObjectCollection>
+                        <bindingcodedom:BindingCodeDomPopCalculationStack PopCount="1"/>
+                        <bindingcodedom:BindingCodeDomPrimitiveValue>
+                            <system:Double>0.0</system:Double>
+                        </bindingcodedom:BindingCodeDomPrimitiveValue>
+                    </bindingcodedom:BindingCodeDomObjectCollection>
+                </bindingcodedom:BindingCodeDomObjectGroup>
+            </bindingcodedom:BindingCodeDomLogicalConditionBranch.FalseCondition>
+        </bindingcodedom:BindingCodeDomLogicalConditionBranch>
+    </bindingcodedom:BindingCodeDomConverterParameter>
+    <bindingcodedom:BindingCodeDomConverterParameter x:Key="BindingCodeDomConverterParameter_BorderThickness">
+        <!--
+        <x:Code>
+            <![CDATA[
+                // 代码逻辑：
+                if (values[0] == WindowState.Normal)
+                    ;
+                else
+                {
+                    #pop 1
+                    #push [double] 0.0
+                }
+            ]]>
+        </x:Code>
+        -->
+        <bindingcodedom:BindingCodeDomLogicalConditionBranch>
+            <bindingcodedom:BindingCodeDomLogicalConditionBranch.Condition>
+                <bindingcodedom:BindingCodeDomEqualityBinaryOperation>
+                    <bindingcodedom:BindingCodeDomEqualityBinaryOperation.RightObject>
+                        <bindingcodedom:BindingCodeDomPrimitiveValue>
+                            <WindowState>Normal</WindowState>
+                        </bindingcodedom:BindingCodeDomPrimitiveValue>
+                    </bindingcodedom:BindingCodeDomEqualityBinaryOperation.RightObject>
+                </bindingcodedom:BindingCodeDomEqualityBinaryOperation>
+            </bindingcodedom:BindingCodeDomLogicalConditionBranch.Condition>
+
+            <bindingcodedom:BindingCodeDomLogicalConditionBranch.TrueCondition>
+                <bindingcodedom:BindingCodeDomDoNothing/>
+            </bindingcodedom:BindingCodeDomLogicalConditionBranch.TrueCondition>
+            <bindingcodedom:BindingCodeDomLogicalConditionBranch.FalseCondition>
+                <bindingcodedom:BindingCodeDomObjectGroup>
+                    <bindingcodedom:BindingCodeDomObjectCollection>
+                        <bindingcodedom:BindingCodeDomPopCalculationStack PopCount="1"/>
+                        <bindingcodedom:BindingCodeDomPrimitiveValue>
+                            <Thickness>0</Thickness>
+                        </bindingcodedom:BindingCodeDomPrimitiveValue>
+                    </bindingcodedom:BindingCodeDomObjectCollection>
+                </bindingcodedom:BindingCodeDomObjectGroup>
+            </bindingcodedom:BindingCodeDomLogicalConditionBranch.FalseCondition>
+        </bindingcodedom:BindingCodeDomLogicalConditionBranch>
+    </bindingcodedom:BindingCodeDomConverterParameter>
+    <bindingcodedom:BindingCodeDomConverterParameter x:Key="BindingCodeDomConverterParameter_ThemeColor">
+        <bindingcodedom:BindingCodeDomLogicalConditionBranch>
+            <!--
+            <x:Code>
+                <![CDATA[
+                    // 代码逻辑：
+                    // values : object[3]
+                    WindowState windowState = #pop 1
+                    bool isActive = #pop 1
+                    if (isActive && windowState == WindowState.Normal)
+                        ;
+                    else
+                    {
+                        #pop 1
+                        #push [System.Windows.Media.Color] Transparent
+                    }
+                    return #pop 1
+                ]]>
+            </x:Code>
+            -->
+            <bindingcodedom:BindingCodeDomLogicalConditionBranch.Condition>
+                <bindingcodedom:BindingCodeDomBooleanAddLogicalBinaryOperation>
+                    <bindingcodedom:BindingCodeDomBooleanAddLogicalBinaryOperation.RightObject>
+                        <bindingcodedom:BindingCodeDomEqualityBinaryOperation>
+                            <bindingcodedom:BindingCodeDomEqualityBinaryOperation.RightObject>
+                                <bindingcodedom:BindingCodeDomPrimitiveValue>
+                                    <WindowState>Normal</WindowState>
+                                </bindingcodedom:BindingCodeDomPrimitiveValue>
+                            </bindingcodedom:BindingCodeDomEqualityBinaryOperation.RightObject>
+                        </bindingcodedom:BindingCodeDomEqualityBinaryOperation>
+                    </bindingcodedom:BindingCodeDomBooleanAddLogicalBinaryOperation.RightObject>
+                </bindingcodedom:BindingCodeDomBooleanAddLogicalBinaryOperation>
+            </bindingcodedom:BindingCodeDomLogicalConditionBranch.Condition>
+
+            <bindingcodedom:BindingCodeDomLogicalConditionBranch.TrueCondition>
+                <bindingcodedom:BindingCodeDomDoNothing/>
+            </bindingcodedom:BindingCodeDomLogicalConditionBranch.TrueCondition>
+            <bindingcodedom:BindingCodeDomLogicalConditionBranch.FalseCondition>
+                <bindingcodedom:BindingCodeDomObjectGroup>
+                    <bindingcodedom:BindingCodeDomObjectCollection>
+                        <bindingcodedom:BindingCodeDomPopCalculationStack PopCount="1"/>
+                        <bindingcodedom:BindingCodeDomPrimitiveValue>
+                            <Color>Transparent</Color>
+                        </bindingcodedom:BindingCodeDomPrimitiveValue>
+                    </bindingcodedom:BindingCodeDomObjectCollection>
+                </bindingcodedom:BindingCodeDomObjectGroup>
+            </bindingcodedom:BindingCodeDomLogicalConditionBranch.FalseCondition>
+        </bindingcodedom:BindingCodeDomLogicalConditionBranch>
+    </bindingcodedom:BindingCodeDomConverterParameter>
     <Style TargetType="{x:Type local:DropShadowWindow}">
         <Setter Property="AllowsTransparency" Value="True"/>
         <Setter Property="WindowResizeBorderThickness">
@@ -101,14 +241,58 @@
                 <ControlTemplate TargetType="{x:Type local:DropShadowWindow}">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="{TemplateBinding Converter={StaticResource DoubleToGridLengthConverter}, Property=BlurRadius}"></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                            <RowDefinition Height="{TemplateBinding Converter={StaticResource DoubleToGridLengthConverter}, Property=BlurRadius}"></RowDefinition>
+                            <RowDefinition>
+                                <RowDefinition.Height>
+                                    <MultiBinding
+                                            Converter="{StaticResource DoubleToGridLengthBindingCodeDomConverter}"
+                                            ConverterParameter="{StaticResource BindingCodeDomConverterParameter_BlurRadius}">
+                                        <MultiBinding.Bindings>
+                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="BlurRadius" Mode="OneWay"/>
+                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="WindowState" Mode="OneWay"/>
+                                        </MultiBinding.Bindings>
+                                    </MultiBinding>
+                                </RowDefinition.Height>
+                            </RowDefinition>
+                            <RowDefinition/>
+                            <RowDefinition>
+                                <RowDefinition.Height>
+                                    <MultiBinding
+                                            Converter="{StaticResource DoubleToGridLengthBindingCodeDomConverter}"
+                                            ConverterParameter="{StaticResource BindingCodeDomConverterParameter_BlurRadius}">
+                                        <MultiBinding.Bindings>
+                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="BlurRadius" Mode="OneWay"/>
+                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="WindowState" Mode="OneWay"/>
+                                        </MultiBinding.Bindings>
+                                    </MultiBinding>
+                                </RowDefinition.Height>
+                            </RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{TemplateBinding Converter={StaticResource DoubleToGridLengthConverter}, Property=BlurRadius}"></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition Width="{TemplateBinding Converter={StaticResource DoubleToGridLengthConverter}, Property=BlurRadius}"></ColumnDefinition>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Width>
+                                    <MultiBinding
+                                            Converter="{StaticResource DoubleToGridLengthBindingCodeDomConverter}"
+                                            ConverterParameter="{StaticResource BindingCodeDomConverterParameter_BlurRadius}">
+                                        <MultiBinding.Bindings>
+                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="BlurRadius" Mode="OneWay"/>
+                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="WindowState" Mode="OneWay"/>
+                                        </MultiBinding.Bindings>
+                                    </MultiBinding>
+                                </ColumnDefinition.Width>
+                            </ColumnDefinition>
+                            <ColumnDefinition/>
+                            <ColumnDefinition>
+                                <ColumnDefinition.Width>
+                                    <MultiBinding
+                                            Converter="{StaticResource DoubleToGridLengthBindingCodeDomConverter}"
+                                            ConverterParameter="{StaticResource BindingCodeDomConverterParameter_BlurRadius}">
+                                        <MultiBinding.Bindings>
+                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="BlurRadius" Mode="OneWay"/>
+                                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="WindowState" Mode="OneWay"/>
+                                        </MultiBinding.Bindings>
+                                    </MultiBinding>
+                                </ColumnDefinition.Width>
+                            </ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Grid.Resources>
                             <Style TargetType="Rectangle">
@@ -116,7 +300,7 @@
                                 <Setter Property="Fill" Value="#01000000"/>
                             </Style>
                         </Grid.Resources>
-                        
+
                         <Rectangle x:Name="WindowNorthResizeRect" Grid.Row="0" Grid.Column="1"
                                 local:CustomizedWindow.IsWindowNorthResizeAreaPart="True"/>
                         <Rectangle x:Name="WindowSouthResizeRect" Grid.Row="2" Grid.Column="1"
@@ -135,30 +319,82 @@
                                 local:CustomizedWindow.IsWindowSouthWestResizeAreaPart="True"/>
 
                         <Border x:Name="WindowBorder"
-                            Grid.Row="1" Grid.Column="1"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                                Grid.Row="1" Grid.Column="1">
+                            <Border.BorderBrush>
+                                <MultiBinding
+                                        Converter="{StaticResource ColorToSolidColorBrushBindingCodeDomConverter}"
+                                        ConverterParameter="{StaticResource BindingCodeDomConverterParameter_ThemeColor}">
+                                    <MultiBinding.Bindings>
+                                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="DropShadowColor" Mode="OneWay"/>
+                                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="IsActive" Mode="OneWay"/>
+                                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="WindowState" Mode="OneWay"/>
+                                    </MultiBinding.Bindings>
+                                </MultiBinding>
+                            </Border.BorderBrush>
+                            <Border.BorderThickness>
+                                <MultiBinding
+                                    Converter="{StaticResource BindingCodeDomConverter}"
+                                    ConverterParameter="{StaticResource BindingCodeDomConverterParameter_BorderThickness}">
+                                    <MultiBinding.Bindings>
+                                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="BorderThickness" Mode="OneWay"/>
+                                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="WindowState" Mode="OneWay"/>
+                                    </MultiBinding.Bindings>
+                                </MultiBinding>
+                            </Border.BorderThickness>
                             <Border.Effect>
-                                <DropShadowEffect ShadowDepth="0"
-                                        Color="{TemplateBinding DropShadowColor}"
-                                        BlurRadius="{TemplateBinding BlurRadius}"/>
+                                <DropShadowEffect
+                                        ShadowDepth="0">
+                                    <DropShadowEffect.BlurRadius>
+                                        <MultiBinding
+                                                Converter="{StaticResource BindingCodeDomConverter}"
+                                                ConverterParameter="{StaticResource BindingCodeDomConverterParameter_BlurRadius}">
+                                            <MultiBinding.Bindings>
+                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="BlurRadius" Mode="OneWay"/>
+                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="WindowState" Mode="OneWay"/>
+                                            </MultiBinding.Bindings>
+                                        </MultiBinding>
+                                    </DropShadowEffect.BlurRadius>
+                                    <DropShadowEffect.Color>
+                                        <MultiBinding
+                                                Converter="{StaticResource BindingCodeDomConverter}"
+                                                ConverterParameter="{StaticResource BindingCodeDomConverterParameter_ThemeColor}">
+                                            <MultiBinding.Bindings>
+                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="DropShadowColor" Mode="OneWay"/>
+                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="IsActive" Mode="OneWay"/>
+                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=local:DropShadowWindow}" Path="WindowState" Mode="OneWay"/>
+                                            </MultiBinding.Bindings>
+                                        </MultiBinding>
+                                    </DropShadowEffect.Color>
+                                </DropShadowEffect>
                             </Border.Effect>
 
                             <Grid x:Name="LayoutRoot"
-                                Background="{TemplateBinding Background}">
+                                    Background="{TemplateBinding Background}">
                                 <AdornerDecorator KeyboardNavigation.IsTabStop="False">
                                     <ContentPresenter x:Name="MainContentPresenter"
-                                        Content="{TemplateBinding Content}"
-                                        ContentTemplate="{TemplateBinding ContentTemplate}"
-                                        KeyboardNavigation.TabNavigation="Cycle" />
+                                            Content="{TemplateBinding Content}"
+                                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                                            KeyboardNavigation.TabNavigation="Cycle" />
                                 </AdornerDecorator>
 
                                 <ResizeGrip x:Name="ResizeGrip"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom"
-                                    IsTabStop="False"
-                                    Visibility="Hidden"
-                                    WindowChrome.ResizeGripDirection="BottomRight" />
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Bottom"
+                                        IsTabStop="False"
+                                        WindowChrome.ResizeGripDirection="BottomRight">
+                                    <ResizeGrip.Style>
+                                        <Style TargetType="ResizeGrip">
+                                            <Setter Property="Visibility" Value="Hidden"/>
+                                            <Style.Triggers>
+                                                <DataTrigger
+                                                    Binding="{Binding ResizeMode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DropShadowWindow}}, Mode=OneWay}"
+                                                    Value="CanResizeWithGrip">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ResizeGrip.Style>
+                                </ResizeGrip>
                             </Grid>
                         </Border>
                     </Grid>
