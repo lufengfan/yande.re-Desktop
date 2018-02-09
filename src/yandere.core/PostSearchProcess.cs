@@ -12,28 +12,30 @@ using Yandere.Data;
 namespace Yandere
 {
     public class PostSearchProcess :
-        ISearchProcess<IEnumerable<Lazy<YanderePostPreview>>, YandereTag>,
-        ISearchProcess<IEnumerable<Lazy<YanderePostPreview>>, YandereTagCollection>
+        ISearchProcess<PostSearchResult, YandereTag>,
+        ISearchProcess<PostSearchResult, YandereTagCollection>
     {
-        public IEnumerable<Lazy<YanderePostPreview>> Search()
+        public PostSearchResult Search()
         {
-            return this.SearchInternal();
+            return new PostSearchResult(this.SearchInternal());
         }
 
-        public IEnumerable<Lazy<YanderePostPreview>> Search(YandereTag condition)
+        public PostSearchResult Search(YandereTag condition)
         {
             if (condition == null) throw new ArgumentNullException(nameof(condition));
 
-            return this.SearchInternal(PostSearchProcess.TagEscape(condition));
+            return new PostSearchResult(this.SearchInternal(PostSearchProcess.TagEscape(condition)));
         }
 
-        public IEnumerable<Lazy<YanderePostPreview>> Search(YandereTagCollection condition)
+        public PostSearchResult Search(YandereTagCollection condition)
         {
             if (condition == null) throw new ArgumentNullException(nameof(condition));
 
-            return this.SearchInternal(
-                condition.Select(tag => PostSearchProcess.TagEscape(tag))
-                    .ToArray()
+            return new PostSearchResult(
+                this.SearchInternal(
+                    condition.Select(tag => PostSearchProcess.TagEscape(tag))
+                        .ToArray()
+                )
             );
         }
 
@@ -44,7 +46,7 @@ namespace Yandere
             return Regex.Replace(tag.Value, @"\s", "_");
         }
 
-        protected internal virtual IEnumerable<Lazy<YanderePostPreview>> SearchInternal(params string[] tags)
+        protected internal virtual IEnumerable<YanderePostPreview> SearchInternal(params string[] tags)
         {
             string tagStr;
             if (tags == null) tagStr = string.Empty;
@@ -96,14 +98,12 @@ namespace Yandere
                         if (postIDMatch.Success && sizeMatch.Success)
                         {
                             uint id = uint.Parse(postIDMatch.Groups["post_id"].Value);
-                            yield return new Lazy<YanderePostPreview>(() =>
-                                new YanderePostPreview(id, previewImageUri,
-                                    new Size(
-                                        int.Parse(sizeMatch.Groups["x"].Value),
-                                        int.Parse(sizeMatch.Groups["y"].Value)
-                                    ),
-                                    new Lazy<YanderePost>(()=>YanderePost.GetPost(id))
-                                )
+                            yield return new YanderePostPreview(id, previewImageUri,
+                                new Size(
+                                    int.Parse(sizeMatch.Groups["x"].Value),
+                                    int.Parse(sizeMatch.Groups["y"].Value)
+                                ),
+                                new Lazy<YanderePost>(() => YanderePost.GetPost(id))
                             );
                         }
                     }

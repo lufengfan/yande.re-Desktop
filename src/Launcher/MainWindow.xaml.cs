@@ -36,29 +36,45 @@ namespace Launcher
                 this.DragMove();
         }
 
-        private void wp_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            return;
-            PostSearchProcess process = new PostSearchProcess();
-            var posts = process.Search();
-            int i = 0;
-            foreach (Lazy<YanderePostPreview> post in posts)
+            new System.Threading.Thread(() =>
             {
-                async void addPostThumb(Lazy<YanderePostPreview> _post)
-                {
-                    PostThumb thumb = new PostThumb()
-                    {
-                        Style = (Style)this.wp.Resources["VerticalOrientedPostThumbStyle"]
-                    };
-                    this.wp.Children.Add(thumb);
+                PostSearchProcess process = new PostSearchProcess();
+                var searchResult = process.Search();
 
-                    Uri previewImageUri = await Task.Run(() => _post.Value.PreviewImageUri);
-                    thumb.ImageSource = new BitmapImage(previewImageUri);
+                this.Dispatcher.BeginInvoke(
+                    new Action<PostSearchResult>(arg =>
+                    {
+                        this.ItemsControl.DataContext = searchResult;
+                        arg.Load(); // 加载 5 个。
+                    }),
+                    searchResult
+                );
+
+                /*
+                int i = 0;
+                foreach (Lazy<YanderePostPreview> post in posts)
+                {
+                    async void addPostThumb(Lazy<YanderePostPreview> _post)
+                    {
+                        PostThumb thumb = new PostThumb()
+                        {
+                            Style = (Style)this.wp.Resources["VerticalOrientedPostThumbStyle"]
+                        };
+                        this.wp.Children.Add(thumb);
+
+                        Uri previewImageUri = await Task.Run(() => _post.Value.PreviewImageUri);
+                        thumb.ImageSource = new BitmapImage(previewImageUri);
+                    }
+                    this.Dispatcher.BeginInvoke(new Action<Lazy<YanderePostPreview>>(addPostThumb), post);
+                    i++;
+                    if (i == 5) break;
                 }
-                this.Dispatcher.BeginInvoke(new Action<Lazy<YanderePostPreview>>(addPostThumb), post);
-                i++;
-                if (i == 5) break;
-            }
+                */
+            })
+            { IsBackground = false }
+            .Start();
         }
 
         private void MinimizeCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -80,5 +96,14 @@ namespace Launcher
         private void NormalCommand_Executed(object sender, ExecutedRoutedEventArgs e) => this.WindowState = WindowState.Normal;
 
         private void CloseCommand_Executed(object sender, ExecutedRoutedEventArgs e) => this.Close();
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            return;
+            if (this.sA == null || this.sR == null || this.sG == null || this.sB == null) return;
+
+            Color color = Color.FromArgb((byte)this.sA.Value, (byte)this.sR.Value, (byte)this.sG.Value, (byte)this.sB.Value);
+            Application.Current.Resources[LauncherTheme.DropShadowColorKey] = color;
+        }
     }
 }

@@ -55,8 +55,13 @@
     </Page>
     <Compile Include="Collections\ObjectModel\SpecificPartCollection.cs" />
     <Compile Include="Controls\ChamferPanel.cs" />
+    <Compile Include="Controls\CustomizedGrid.cs" />
+    <Compile Include="Data\CustomizedGridChildLocationConverter.cs" />
+    <Compile Include="Data\CustomizedGridLogicalSizeConverter.cs" />
     <Compile Include="Controls\CustomizedWindow.cs" />
     <Compile Include="Controls\DropShadowWindow.cs" />
+    <Compile Include="Controls\ItemsView.cs" />
+    <Compile Include="Controls\ItemsViewType.cs" />
     <Compile Include="Controls\StretchHelper.cs" />
     <Compile Include="Controls\StretchMode.cs" />
     <Compile Include="Controls\WindowResizeDirection.cs" />
@@ -94,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\PostThumb.cs" />
+    <Compile Include="Data\ISelector.cs" />
     <Compile Include="Data\StretchHelperConverters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

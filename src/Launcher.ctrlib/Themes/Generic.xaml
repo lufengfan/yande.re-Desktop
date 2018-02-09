@@ -231,11 +231,7 @@
     </bindingcodedom:BindingCodeDomConverterParameter>
     <Style TargetType="{x:Type local:DropShadowWindow}">
         <Setter Property="AllowsTransparency" Value="True"/>
-        <Setter Property="WindowResizeBorderThickness">
-            <Setter.Value>
-                <Binding RelativeSource="{x:Static RelativeSource.Self}" Path="BlurRadius" Converter="{StaticResource DoubleToThicknessConverter}"/>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="WindowResizeBorderThickness" Value="{Binding BlurRadius, RelativeSource={RelativeSource Mode=Self}, Mode=OneWay, Converter={StaticResource DoubleToThicknessConverter}}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:DropShadowWindow}">
@@ -401,5 +397,26 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:ItemsView}">
+        <Setter Property="ViewType" Value="Grid"/>
+        <Style.Triggers>
+            <Trigger Property="ViewType" Value="Grid">
+                <Setter Property="ItemsPanel" Value="{Binding GridItemsPanel, RelativeSource={RelativeSource Mode=Self}, Mode=OneWay}"/>
+                <Setter Property="ItemTemplate" Value="{Binding GridItemTemplate, RelativeSource={RelativeSource Mode=Self}, Mode=OneWay}"/>
+                <Setter Property="ItemTemplateSelector" Value="{Binding GridItemTemplateSelector, RelativeSource={RelativeSource Mode=Self}, Mode=OneWay}"/>
+            </Trigger>
+            <Trigger Property="ViewType" Value="HorizontalWrap">
+                <Setter Property="ItemsPanel" Value="{Binding HorizontalWrapItemsPanel, RelativeSource={RelativeSource Mode=Self}, Mode=OneWay}"/>
+                <Setter Property="ItemTemplate" Value="{Binding HorizontalWrapItemTemplate, RelativeSource={RelativeSource Mode=Self}, Mode=OneWay}"/>
+                <Setter Property="ItemTemplateSelector" Value="{Binding HorizontalWrapItemTemplateSelector, RelativeSource={RelativeSource Mode=Self}, Mode=OneWay}"/>
+            </Trigger>
+            <Trigger Property="ViewType" Value="VerticalHang">
+                <Setter Property="ItemsPanel" Value="{Binding VerticalHangItemsPanel, RelativeSource={RelativeSource Mode=Self}, Mode=OneWay}"/>
+                <Setter Property="ItemTemplate" Value="{Binding VerticalHangItemTemplate, RelativeSource={RelativeSource Mode=Self}, Mode=OneWay}"/>
+                <Setter Property="ItemTemplateSelector" Value="{Binding VerticalHangItemTemplateSelector, RelativeSource={RelativeSource Mode=Self}, Mode=OneWay}"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 </ResourceDictionary>

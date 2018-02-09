@@ -5,6 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Launcher"
         xmlns:ctrlib="clr-namespace:Launcher.Controls;assembly=Launcher.ctrlib"
+        xmlns:converters="clr-namespace:Launcher.Data;assembly=Launcher.ctrlib"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib"
         mc:Ignorable="d"
         Title="yande.re"
         AllowsTransparency="True"
@@ -12,8 +15,9 @@
         Height="500" Width="1000"
         MinWidth="600" MinHeight="300"
         Icon="logo/logo_small.png"
-        BorderBrush="DeepSkyBlue" BorderThickness="1"
-        BlurRadius="10" DropShadowColor="DeepSkyBlue">
+        BorderBrush="{DynamicResource {x:Static local:LauncherTheme.BorderBrushKey}}" BorderThickness="1"
+        BlurRadius="{DynamicResource {x:Static local:LauncherTheme.BlurRadiusKey}}" DropShadowColor="{DynamicResource {x:Static local:LauncherTheme.DropShadowColorKey}}"
+        Loaded="Window_Loaded">
     <ctrlib:DropShadowWindow.Style>
         <Style TargetType="ctrlib:DropShadowWindow">
             <Style.Triggers>
@@ -42,6 +46,17 @@
     </ctrlib:DropShadowWindow.CommandBindings>
     <ctrlib:DropShadowWindow.WindowTitleAreaContextMenu>
         <ContextMenu>
+            <ContextMenu.CommandBindings>
+                <CommandBinding Command="{StaticResource WindowMinimizeCommand}"
+                CanExecute="MinimizeCommand_CanExecute"
+                Executed="MinimizeCommand_Executed"/>
+                <CommandBinding Command="{StaticResource WindowMaximizeCommand}"
+                CanExecute="MaximizeCommand_CanExecute"
+                Executed="MaximizeCommand_Executed"/>
+                <CommandBinding Command="{StaticResource WindowNormalCommand}"
+                Executed="NormalCommand_Executed"/>
+                <CommandBinding Command="Close" Executed="CloseCommand_Executed"/>
+            </ContextMenu.CommandBindings>
             <MenuItem Header="还原(_R)"
                     Command="{DynamicResource WindowNormalCommand}"/>
             <MenuItem Header="移动(_M)"/>
@@ -155,34 +170,199 @@
             </StackPanel>
         </Grid>
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Visibility="Visible">
-            <WrapPanel x:Name="wp" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch"
-                       Loaded="wp_Loaded">
-                <WrapPanel.Resources>
-                    <Style TargetType="ctrlib:PostThumb" x:Key="VerticalOrientedPostThumbStyle">
-                        <Setter Property="Height" Value="160"/>
-                        <Setter Property="Background" Value="#1FFFFFFF"/>
-                        <Setter Property="Margin" Value="8,10"/>
-                        <Setter Property="CornerRadius" Value="5"></Setter>
+        <Grid x:Name="WindowClientGrid" Grid.Row="1">
+            <!-- 发光颜色调节 -->
+            <StackPanel Visibility="Collapsed">
+                <StackPanel.Resources>
+                    <Style TargetType="Slider">
+                        <Setter Property="Maximum" Value="255"/>
+                        <Setter Property="Margin" Value="20,10"/>
                     </Style>
-                </WrapPanel.Resources>
+                </StackPanel.Resources>
+            
+                <Slider x:Name="sA" Value="255" ValueChanged="Slider_ValueChanged"/>
+                <Slider x:Name="sR" Value="255" ValueChanged="Slider_ValueChanged"/>
+                <Slider x:Name="sG" Value="255" ValueChanged="Slider_ValueChanged"/>
+                <Slider x:Name="sB" Value="255" ValueChanged="Slider_ValueChanged"/>
+            </StackPanel>
 
-                <ctrlib:FilletPanel Height="400">
-                    <Image/>
-                </ctrlib:FilletPanel>
-                <ctrlib:FilletPanel Height="400">
-                    <Image/>
-                </ctrlib:FilletPanel>
-                <ctrlib:ChamferPanel Height="400" CornerSize="10">
-                    <Image/>
-                </ctrlib:ChamferPanel>
-                <ctrlib:FilletPanel Height="400">
-                    <Image/>
-                </ctrlib:FilletPanel>
-                <ctrlib:FilletPanel Height="400">
-                    <Image/>
-                </ctrlib:FilletPanel>
-            </WrapPanel>
-        </ScrollViewer>
+            <ctrlib:ItemsView x:Name="PostThumbView" ViewType="HorizontalWrap">
+                <ctrlib:ItemsView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ctrlib:ItemsView.ItemsPanel>
+                <ctrlib:ItemsView.ItemTemplate>
+                    <DataTemplate>
+                        <Button Width="50" Height="50" Content="{Binding}"/>
+                    </DataTemplate>
+                </ctrlib:ItemsView.ItemTemplate>
+                
+                <ctrlib:ItemsView.GridItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ScrollViewer x:Name="ItemsScrollViewer" VerticalScrollBarVisibility="Auto">
+                            <ctrlib:CustomizedGrid x:Name="ItemsDisplayGrid">
+                                <ctrlib:CustomizedGrid.Style>
+                                    <Style TargetType="ctrlib:CustomizedGrid">
+                                        <Setter Property="RowCount">
+                                            <Setter.Value>
+                                                <MultiBinding>
+                                                    <Binding Path="Children.Count" Mode="OneWay"/>
+                                                    <Binding Path="ColumnCount" Mode="OneWay"/>
+                                                    <MultiBinding.Converter>
+                                                        <converters:CustomizedGridLogicalSizeConverter/>
+                                                    </MultiBinding.Converter>
+                                                </MultiBinding>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="RowDefinitionSelector">
+                                            <Setter.Value>
+                                                <ctrlib:RowDefinitionSelector>
+                                                    <RowDefinition Height="Auto"/>
+                                                </ctrlib:RowDefinitionSelector>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="ColumnCount" Value="5"/>
+                                    </Style>
+                                </ctrlib:CustomizedGrid.Style>
+                            </ctrlib:CustomizedGrid>
+                        </ScrollViewer>
+                    </ItemsPanelTemplate>
+                </ctrlib:ItemsView.GridItemsPanel>
+                <ctrlib:ItemsView.GridItemTemplate>
+                    <DataTemplate>
+                        <Button Width="50" Height="50" Content="{Binding}"/>
+                    </DataTemplate>
+                </ctrlib:ItemsView.GridItemTemplate>
+
+                <ctrlib:ItemsView.HorizontalWrapItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ctrlib:ItemsView.HorizontalWrapItemsPanel>
+                <ctrlib:ItemsView.HorizontalWrapItemTemplate>
+                    <DataTemplate>
+                        <Button Width="50" Height="50" Content="{Binding}"/>
+                    </DataTemplate>
+                </ctrlib:ItemsView.HorizontalWrapItemTemplate>
+
+                <system:Double>5</system:Double>
+                asdf
+                <Color>Yellow</Color>
+            </ctrlib:ItemsView>
+
+            <ItemsControl x:Name="ItemsControl" Visibility="Visible"
+                    ItemsSource="{Binding PostPreviews}">
+                <ItemsControl.Template>
+                    <ControlTemplate>
+                        <ScrollViewer>
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ctrlib:CustomizedGrid x:Name="ItemsDisplayGrid">
+                            <ctrlib:CustomizedGrid.Resources>
+                                <Style TargetType="ctrlib:PostThumb">
+                                    <Setter Property="Height" Value="160"/>
+                                    <Setter Property="Background" Value="#1FFFFFFF"/>
+                                    <Setter Property="Margin" Value="8,10"/>
+                                    <Setter Property="CornerRadius" Value="5"></Setter>
+                                </Style>
+                            </ctrlib:CustomizedGrid.Resources>
+                            <ctrlib:CustomizedGrid.Style>
+                                <Style TargetType="ctrlib:CustomizedGrid">
+                                    <Setter Property="Margin" Value="8,0"/>
+                                    <Setter Property="RowCount">
+                                        <Setter.Value>
+                                            <MultiBinding>
+                                                <Binding RelativeSource="{RelativeSource Mode=Self}" Path="Children.Count" Mode="OneWay"/>
+                                                <Binding RelativeSource="{RelativeSource Mode=Self}" Path="ColumnCount" Mode="OneWay"/>
+                                                <MultiBinding.Converter>
+                                                    <converters:CustomizedGridLogicalSizeConverter/>
+                                                </MultiBinding.Converter>
+                                            </MultiBinding>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="RowDefinitionSelector">
+                                        <Setter.Value>
+                                            <ctrlib:RowDefinitionSelector>
+                                                <RowDefinition Height="Auto"/>
+                                            </ctrlib:RowDefinitionSelector>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="ColumnCount" Value="5"/>
+                                </Style>
+                            </ctrlib:CustomizedGrid.Style>
+                        </ctrlib:CustomizedGrid>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ctrlib:PostThumb ImageSource="{Binding Value.PreviewImageUri}">
+                            <Grid.Row>
+                                <MultiBinding>
+                                    <Binding Path="Index"/>
+                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ctrlib:CustomizedGrid}" Path="RowCount"/>
+                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ctrlib:CustomizedGrid}" Path="ColumnCount"/>
+                                    <MultiBinding.Converter>
+                                        <converters:CustomizedGridChildLocationConverter/>
+                                    </MultiBinding.Converter>
+                                    <MultiBinding.ConverterParameter>
+                                        <converters:CustomizedGridChildLocateDirection>Row</converters:CustomizedGridChildLocateDirection>
+                                    </MultiBinding.ConverterParameter>
+                                </MultiBinding>
+                            </Grid.Row>
+                            <Grid.Column>
+                                <MultiBinding>
+                                    <Binding Path="Index"/>
+                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ctrlib:CustomizedGrid}" Path="RowCount"/>
+                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ctrlib:CustomizedGrid}" Path="ColumnCount"/>
+                                    <MultiBinding.Converter>
+                                        <converters:CustomizedGridChildLocationConverter/>
+                                    </MultiBinding.Converter>
+                                    <MultiBinding.ConverterParameter>
+                                        <converters:CustomizedGridChildLocateDirection>Column</converters:CustomizedGridChildLocateDirection>
+                                    </MultiBinding.ConverterParameter>
+                                </MultiBinding>
+                            </Grid.Column>
+                        </ctrlib:PostThumb>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
+                <WrapPanel x:Name="wp" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                    <WrapPanel.Resources>
+                        <Style TargetType="ctrlib:PostThumb" x:Key="VerticalOrientedPostThumbStyle">
+                            <Setter Property="Height" Value="160"/>
+                            <Setter Property="Background" Value="#1FFFFFFF"/>
+                            <Setter Property="Margin" Value="8,10"/>
+                            <Setter Property="CornerRadius" Value="5"></Setter>
+                        </Style>
+                    </WrapPanel.Resources>
+                
+
+                
+
+                    <ctrlib:FilletPanel Height="400">
+                        <Image/>
+                    </ctrlib:FilletPanel>
+                    <ctrlib:FilletPanel Height="400">
+                        <Image/>
+                    </ctrlib:FilletPanel>
+                    <ctrlib:ChamferPanel Height="400" CornerSize="10">
+                        <Image/>
+                    </ctrlib:ChamferPanel>
+                    <ctrlib:FilletPanel Height="400">
+                        <Image/>
+                    </ctrlib:FilletPanel>
+                    <ctrlib:FilletPanel Height="400">
+                        <Image/>
+                    </ctrlib:FilletPanel>
+                </WrapPanel>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </ctrlib:DropShadowWindow>

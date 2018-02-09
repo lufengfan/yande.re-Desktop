@@ -17,6 +17,9 @@ namespace Yandere.ComponentModel
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public void OnPropertyChanged(PropertyChangedEventArgs e) =>
+            this.PropertyChanged?.Invoke(this.sender, e);
+
         public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this.sender, new PropertyChangedEventArgs(propertyName));

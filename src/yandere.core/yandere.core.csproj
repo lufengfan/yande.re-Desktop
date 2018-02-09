@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\YanderePostPreview.cs" />
+    <Compile Include="PostSearchResult.cs" />
     <Compile Include="Threadings\ILoadingTask.cs" />
     <Compile Include="Threadings\LoadingTask.cs" />
     <Compile Include="Threadings\LoadingTaskPool.cs" />
