@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 
 namespace Launcher.Data
@@ -8,7 +9,7 @@ namespace Launcher.Data
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            int total = (int)values[0];
+            int total = (values[0] == DependencyProperty.UnsetValue) ? 0 : (int)values[0];
             int factor = (int)values[1];
 
             if (factor == 0)

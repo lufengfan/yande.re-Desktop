@@ -11,7 +11,7 @@ namespace Launcher.Data.BindingCodeDom
     {
         private DoubleToGridLengthConverter innerConverter = new DoubleToGridLengthConverter();
 
-        protected override object ProcessCodeDomExecutionResult(object[] values, Type targetType, object parameter, CultureInfo culture)
+        protected override object AfterCodeDomExecution(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             return this.innerConverter.Convert(values[0], targetType, parameter, culture);
         }

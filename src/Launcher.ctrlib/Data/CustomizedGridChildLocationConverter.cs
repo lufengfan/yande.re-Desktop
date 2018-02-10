@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 
 namespace Launcher.Data
@@ -18,9 +20,10 @@ namespace Launcher.Data
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            int index = (int)values[0];
-            int rowCount = (int)values[1];
-            int columnCount = (int)values[2];
+            UIElement element = values[0] as UIElement; // 模版作用的对象。
+            int index = (int)values[1];
+            int rowCount = (int)values[2];
+            int columnCount = (int)values[3];
             CustomizedGridChildLocateDirection direction = (CustomizedGridChildLocateDirection)parameter;
 
             if (columnCount == 0) return 0;
@@ -30,8 +33,10 @@ namespace Launcher.Data
                 switch (direction)
                 {
                     case CustomizedGridChildLocateDirection.Row:
+                        Grid.SetRow(element, row); // 设置模版作用对象的 Grid.Row 。
                         return row;
                     case CustomizedGridChildLocateDirection.Column:
+                        Grid.SetColumn(element, column); // 设置模版作用对象的 Grid.Column 。
                         return column;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(parameter));

@@ -56,6 +56,9 @@
     <Compile Include="Collections\ObjectModel\SpecificPartCollection.cs" />
     <Compile Include="Controls\ChamferPanel.cs" />
     <Compile Include="Controls\CustomizedGrid.cs" />
+    <Compile Include="Controls\StatusInfo.cs" />
+    <Compile Include="Data\AspectRatioConverter.cs" />
+    <Compile Include="Data\BindingCodeDom\BindingCodeDomRealBinaryOperation.cs" />
     <Compile Include="Data\CustomizedGridChildLocationConverter.cs" />
     <Compile Include="Data\CustomizedGridLogicalSizeConverter.cs" />
     <Compile Include="Controls\CustomizedWindow.cs" />

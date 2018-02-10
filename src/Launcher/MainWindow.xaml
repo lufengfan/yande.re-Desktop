@@ -171,7 +171,7 @@
         </Grid>
 
         <Grid x:Name="WindowClientGrid" Grid.Row="1">
-            <!-- 发光颜色调节 -->
+            <!-- DropShadowWindow 发光颜色调节 -->
             <StackPanel Visibility="Collapsed">
                 <StackPanel.Resources>
                     <Style TargetType="Slider">
@@ -186,89 +186,115 @@
                 <Slider x:Name="sB" Value="255" ValueChanged="Slider_ValueChanged"/>
             </StackPanel>
 
-            <ctrlib:ItemsView x:Name="PostThumbView" ViewType="HorizontalWrap">
-                <ctrlib:ItemsView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel/>
-                    </ItemsPanelTemplate>
-                </ctrlib:ItemsView.ItemsPanel>
-                <ctrlib:ItemsView.ItemTemplate>
-                    <DataTemplate>
-                        <Button Width="50" Height="50" Content="{Binding}"/>
-                    </DataTemplate>
-                </ctrlib:ItemsView.ItemTemplate>
-                
-                <ctrlib:ItemsView.GridItemsPanel>
-                    <ItemsPanelTemplate>
-                        <ScrollViewer x:Name="ItemsScrollViewer" VerticalScrollBarVisibility="Auto">
-                            <ctrlib:CustomizedGrid x:Name="ItemsDisplayGrid">
-                                <ctrlib:CustomizedGrid.Style>
-                                    <Style TargetType="ctrlib:CustomizedGrid">
-                                        <Setter Property="RowCount">
-                                            <Setter.Value>
-                                                <MultiBinding>
-                                                    <Binding Path="Children.Count" Mode="OneWay"/>
-                                                    <Binding Path="ColumnCount" Mode="OneWay"/>
-                                                    <MultiBinding.Converter>
-                                                        <converters:CustomizedGridLogicalSizeConverter/>
-                                                    </MultiBinding.Converter>
-                                                </MultiBinding>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Setter Property="RowDefinitionSelector">
-                                            <Setter.Value>
-                                                <ctrlib:RowDefinitionSelector>
-                                                    <RowDefinition Height="Auto"/>
-                                                </ctrlib:RowDefinitionSelector>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Setter Property="ColumnCount" Value="5"/>
-                                    </Style>
-                                </ctrlib:CustomizedGrid.Style>
-                            </ctrlib:CustomizedGrid>
-                        </ScrollViewer>
-                    </ItemsPanelTemplate>
-                </ctrlib:ItemsView.GridItemsPanel>
-                <ctrlib:ItemsView.GridItemTemplate>
-                    <DataTemplate>
-                        <Button Width="50" Height="50" Content="{Binding}"/>
-                    </DataTemplate>
-                </ctrlib:ItemsView.GridItemTemplate>
-
-                <ctrlib:ItemsView.HorizontalWrapItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel/>
-                    </ItemsPanelTemplate>
-                </ctrlib:ItemsView.HorizontalWrapItemsPanel>
-                <ctrlib:ItemsView.HorizontalWrapItemTemplate>
-                    <DataTemplate>
-                        <Button Width="50" Height="50" Content="{Binding}"/>
-                    </DataTemplate>
-                </ctrlib:ItemsView.HorizontalWrapItemTemplate>
-
-                <system:Double>5</system:Double>
-                asdf
-                <Color>Yellow</Color>
-            </ctrlib:ItemsView>
-
-            <ItemsControl x:Name="ItemsControl" Visibility="Visible"
-                    ItemsSource="{Binding PostPreviews}">
-                <ItemsControl.Template>
+            <ctrlib:ItemsView x:Name="PostThumbView" 
+                    ItemsSource="{Binding PostPreviews}"
+                    ViewType="Grid">
+                <ctrlib:ItemsView.Template>
                     <ControlTemplate>
-                        <ScrollViewer>
-                            <ItemsPresenter/>
+                        <ScrollViewer x:Name="ItemsScrollViewer"
+                                VerticalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <ItemsPresenter Grid.Row="0"/>
+
+                                <ctrlib:StatusInfo x:Name="Status" Grid.Row="1"
+                                        HorizontalAlignment="Center"
+                                        Margin="0,10">
+                                    <ctrlib:StatusInfo.Resources>
+                                        <SolidColorBrush x:Key="ThemeColor_SolidColorBrush" Color="{DynamicResource {x:Static local:LauncherTheme.DropShadowColorKey}}"/>
+
+                                        <DrawingImage x:Key="SearchMore_Icon">
+                                            <DrawingImage.Drawing>
+                                                <GeometryDrawing
+                                                        Geometry="M990,904.5L760.3,677.2C815,607.1 847.8,519.4 847.8,424.2 847.8,195.7 659.9,9.70000000000005 428.9,9.70000000000005 197.9,9.7 10,195.6 10,424.2 10,652.8 197.9,838.7 428.9,838.7 519.5,838.7 603.4,810 672,761.5L903.3,990.4 990,904.5z M428.9,686.9C282.5,686.9 163.3,569.1 163.3,424.1 163.3,279.2 282.4,161.3 428.9,161.3 575.3,161.3 694.5,279.2 694.5,424.1 694.4,569.1 575.3,686.9 428.9,686.9z"
+                                                        Brush="{DynamicResource ThemeColor_SolidColorBrush}"/>
+                                            </DrawingImage.Drawing>
+                                        </DrawingImage>
+                                        <DrawingImage x:Key="Loading_Icon">
+                                            <DrawingImage.Drawing>
+                                                <GeometryDrawing
+                                                        Geometry="M497.7,8.9C233.3,8.9,19.1,222.6,10,486.4C19.1,259,192.3,72.5,406.6,72.5c218.8,0,396.6,191,396.6,427.5c0,50,41,91,95.7,91C949,591,990,550,990,500C990,231.7,771.2,8.9,502.3,8.9L497.7,8.9L497.7,8.9z M497.7,991.1c268.9,0,483.2-213.7,492.3-477.5C980.9,741,807.7,927.5,593.4,927.5c-218.8,0-396.6-191-396.6-427.5c0-50-41-91-95.7-91C51,409,10,450,10,500C10,768.3,228.8,991.1,497.7,991.1L497.7,991.1z"
+                                                        Brush="ForestGreen"/>
+                                            </DrawingImage.Drawing>
+                                        </DrawingImage>
+                                        <DrawingImage x:Key="Error_Icon">
+                                            <DrawingImage.Drawing>
+                                                <GeometryDrawing
+                                                            Geometry="M500,10C229.4,10 10,229.4 10,500 10,770.6 229.4,990 500,990 770.6,990 990,770.6 990,500 990,229.4 770.6,10 500,10L500,10 500,10z M582.5,173.2L558.9,636.1 440.7,636.1 417.1,173.2 582.5,173.2 582.5,173.2 582.5,173.2z M496.9,856.1C445.2,856.1 414.8,818.8 414.8,774 414.8,726 449.7,690.8 498,690.8 547.5,690.8 580.1,726 580.1,774 580.2,820.9 547.5,856.1 496.9,856.1L496.9,856.1 496.9,856.1z"
+                                                            Brush="IndianRed"/>
+                                            </DrawingImage.Drawing>
+                                        </DrawingImage>
+                                    </ctrlib:StatusInfo.Resources>
+                                    <ctrlib:StatusInfo.Style>
+                                        <Style TargetType="ctrlib:StatusInfo">
+                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                            <Setter Property="Foreground" Value="LightGray"/>
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Setter Property="IconWidth" Value="21"/>
+                                            <Setter Property="IconHeight" Value="21"/>
+                                            <Setter Property="Icon" Value="{StaticResource SearchMore_Icon}"/>
+                                            <Setter Property="FontSize" Value="14"/>
+                                            <Setter Property="Padding" Value="8,0,0,0"/>
+                                            <Setter Property="Content" Value="加载更多"/>
+                                            <Setter Property="Cursor" Value="Hand"/>
+                                            <EventSetter Event="MouseLeftButtonDown" Handler="StatusInfo_MouseLeftButtonDown"/>
+
+                                            <Style.Triggers>
+                                                <DataTrigger
+                                                        Binding="{Binding DataContext.IsSearchComplete, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                                                        Value="True">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+
+                                                <DataTrigger
+                                                        Binding="{Binding DataContext.IsAbort, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="True">
+                                                    <Setter Property="Icon" Value="{StaticResource Error_Icon}"/>
+                                                    <Setter Property="Content" Value="出错啦！重新加载"/>
+                                                    <Setter Property="Cursor" Value="Hand"/>
+                                                </DataTrigger>
+                                                
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding DataContext.IsSearching, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="True"/>
+                                                        <Condition Binding="{Binding DataContext.IsAbort, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="False"/>
+                                                    </MultiDataTrigger.Conditions>
+                                                    <Setter Property="Icon" Value="{StaticResource Loading_Icon}"/>
+                                                    <Setter Property="Content" Value="正在加载……"/>
+                                                    <Setter Property="Cursor" Value="ArrowCD"/>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ctrlib:StatusInfo.Style>
+                                </ctrlib:StatusInfo>
+                            </Grid>
                         </ScrollViewer>
                     </ControlTemplate>
-                </ItemsControl.Template>
-                <ItemsControl.ItemsPanel>
+                </ctrlib:ItemsView.Template>
+
+                <!-- Grid 系列 -->
+                <ctrlib:ItemsView.GridItemsPanel>
                     <ItemsPanelTemplate>
                         <ctrlib:CustomizedGrid x:Name="ItemsDisplayGrid">
                             <ctrlib:CustomizedGrid.Resources>
                                 <Style TargetType="ctrlib:PostThumb">
-                                    <Setter Property="Height" Value="160"/>
                                     <Setter Property="Background" Value="#1FFFFFFF"/>
+                                    <Setter Property="MaxHeight" Value="160"/>
                                     <Setter Property="Margin" Value="8,10"/>
-                                    <Setter Property="CornerRadius" Value="5"></Setter>
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                    <Setter Property="ctrlib:StretchHelper.StretchMode" Value="WidthOriented"/>
+                                    <Setter Property="ctrlib:StretchHelper.AspectRatio">
+                                        <Setter.Value>
+                                            <Binding Path="Value.Size">
+                                                <Binding.Converter>
+                                                    <converters:AspectRatioConverter/>
+                                                </Binding.Converter>
+                                            </Binding>
+                                        </Setter.Value>
+                                    </Setter>
                                 </Style>
                             </ctrlib:CustomizedGrid.Resources>
                             <ctrlib:CustomizedGrid.Style>
@@ -277,7 +303,7 @@
                                     <Setter Property="RowCount">
                                         <Setter.Value>
                                             <MultiBinding>
-                                                <Binding RelativeSource="{RelativeSource Mode=Self}" Path="Children.Count" Mode="OneWay"/>
+                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ctrlib:ItemsView}" Path="DataContext.PostPreviews.Count" Mode="OneWay"/>
                                                 <Binding RelativeSource="{RelativeSource Mode=Self}" Path="ColumnCount" Mode="OneWay"/>
                                                 <MultiBinding.Converter>
                                                     <converters:CustomizedGridLogicalSizeConverter/>
@@ -297,12 +323,14 @@
                             </ctrlib:CustomizedGrid.Style>
                         </ctrlib:CustomizedGrid>
                     </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
+                </ctrlib:ItemsView.GridItemsPanel>
+                <ctrlib:ItemsView.GridItemTemplate>
                     <DataTemplate>
                         <ctrlib:PostThumb ImageSource="{Binding Value.PreviewImageUri}">
                             <Grid.Row>
                                 <MultiBinding>
+                                    <Binding RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                                    <!-- 第一个绑定值是为了设置 Grid.Row 的模版作用对象。 -->
                                     <Binding Path="Index"/>
                                     <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ctrlib:CustomizedGrid}" Path="RowCount"/>
                                     <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ctrlib:CustomizedGrid}" Path="ColumnCount"/>
@@ -316,6 +344,8 @@
                             </Grid.Row>
                             <Grid.Column>
                                 <MultiBinding>
+                                    <Binding RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
+                                    <!-- 第一个绑定值是为了设置 Grid.Column 的模版作用对象。 -->
                                     <Binding Path="Index"/>
                                     <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ctrlib:CustomizedGrid}" Path="RowCount"/>
                                     <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ctrlib:CustomizedGrid}" Path="ColumnCount"/>
@@ -329,40 +359,21 @@
                             </Grid.Column>
                         </ctrlib:PostThumb>
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                </ctrlib:ItemsView.GridItemTemplate>
 
-            <ScrollViewer VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
-                <WrapPanel x:Name="wp" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Stretch">
-                    <WrapPanel.Resources>
-                        <Style TargetType="ctrlib:PostThumb" x:Key="VerticalOrientedPostThumbStyle">
-                            <Setter Property="Height" Value="160"/>
-                            <Setter Property="Background" Value="#1FFFFFFF"/>
-                            <Setter Property="Margin" Value="8,10"/>
-                            <Setter Property="CornerRadius" Value="5"></Setter>
-                        </Style>
-                    </WrapPanel.Resources>
-                
-
-                
-
-                    <ctrlib:FilletPanel Height="400">
-                        <Image/>
-                    </ctrlib:FilletPanel>
-                    <ctrlib:FilletPanel Height="400">
-                        <Image/>
-                    </ctrlib:FilletPanel>
-                    <ctrlib:ChamferPanel Height="400" CornerSize="10">
-                        <Image/>
-                    </ctrlib:ChamferPanel>
-                    <ctrlib:FilletPanel Height="400">
-                        <Image/>
-                    </ctrlib:FilletPanel>
-                    <ctrlib:FilletPanel Height="400">
-                        <Image/>
-                    </ctrlib:FilletPanel>
-                </WrapPanel>
-            </ScrollViewer>
+                <!-- HorizontalWrap 系列 -->
+                <ctrlib:ItemsView.HorizontalWrapItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel x:Name="ItemsDisplayWrap"
+                                VerticalAlignment="Top"/>
+                    </ItemsPanelTemplate>
+                </ctrlib:ItemsView.HorizontalWrapItemsPanel>
+                <ctrlib:ItemsView.HorizontalWrapItemTemplate>
+                    <DataTemplate>
+                        <ctrlib:PostThumb ImageSource="{Binding Value.PreviewImageUri}"/>
+                    </DataTemplate>
+                </ctrlib:ItemsView.HorizontalWrapItemTemplate>
+            </ctrlib:ItemsView>
         </Grid>
     </Grid>
 </ctrlib:DropShadowWindow>

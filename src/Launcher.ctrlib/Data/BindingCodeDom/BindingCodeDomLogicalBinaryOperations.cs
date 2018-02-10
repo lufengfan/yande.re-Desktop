@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Yandere;
 
 namespace Launcher.Data.BindingCodeDom
 {
@@ -20,7 +21,22 @@ namespace Launcher.Data.BindingCodeDom
     
     public class BindingCodeDomLogicalBinaryOperation : BindingCodeDomSpecificBinaryOperation<bool, bool>
     {
-        public virtual LogicalBinaryOperator Operator { get; set; }
+        private ValueBox<LogicalBinaryOperator> operatorBox = ValueBox<LogicalBinaryOperator>.NonValue;
+        public virtual LogicalBinaryOperator Operator
+        {
+            get => this.operatorBox.Value;
+            set => this.operatorBox.Value = value;
+        }
+
+        public BindingCodeDomLogicalBinaryOperation() { }
+
+        protected BindingCodeDomLogicalBinaryOperation(LogicalBinaryOperator _operator)
+        {
+            if (!Enum.IsDefined(typeof(LogicalBinaryOperator), _operator))
+                throw new ArgumentOutOfRangeException(nameof(_operator), _operator, "不支持的操作符枚举值。");
+
+            this.operatorBox.Value = _operator;
+        }
 
         protected override bool ConvertLeft(object value) => (bool)value;
 
@@ -28,46 +44,46 @@ namespace Launcher.Data.BindingCodeDom
 
         protected override object SpecificCalculationImplementation(bool left, bool right)
         {
-            switch (this.Operator)
+            try
             {
-                case LogicalBinaryOperator.Equality:
-                    return left == right;
-                case LogicalBinaryOperator.Inequality:
-                    return left != right;
-                case LogicalBinaryOperator.Add:
-                    return left & right;
-                case LogicalBinaryOperator.BooleanAdd:
-                    return left && right;
-                case LogicalBinaryOperator.Or:
-                    return left | right;
-                case LogicalBinaryOperator.BooleanOr:
-                    return left || right;
-                case LogicalBinaryOperator.Xor:
-                    return left ^ right;
-                case LogicalBinaryOperator.Xnor:
-                    return !(left ^ right);
-                default:
-                    throw new NotSupportedException();
+                switch (this.Operator)
+                {
+                    case LogicalBinaryOperator.Equality:
+                        return left == right;
+                    case LogicalBinaryOperator.Inequality:
+                        return left != right;
+                    case LogicalBinaryOperator.Add:
+                        return left & right;
+                    case LogicalBinaryOperator.BooleanAdd:
+                        return left && right;
+                    case LogicalBinaryOperator.Or:
+                        return left | right;
+                    case LogicalBinaryOperator.BooleanOr:
+                        return left || right;
+                    case LogicalBinaryOperator.Xor:
+                        return left ^ right;
+                    case LogicalBinaryOperator.Xnor:
+                        return !(left ^ right);
+                    default:
+                        throw new NotSupportedException("不支持的运算符。");
+                }
+            }
+            catch (Exception e)
+            {
+                throw new NotSupportedException("不支持的逻辑二元运算。", e);
             }
         }
     }
 
     public abstract class KnownBindingCodeDomLogicalBinaryOperation : BindingCodeDomLogicalBinaryOperation
     {
-        private LogicalBinaryOperator _operator;
         public sealed override LogicalBinaryOperator Operator
         {
-            get => this._operator;
+            get => base.Operator;
             set => throw new ArgumentNullException(nameof(value));
         }
 
-        protected KnownBindingCodeDomLogicalBinaryOperation(LogicalBinaryOperator _operator)
-        {
-            if (!Enum.IsDefined(typeof(LogicalBinaryOperator), _operator))
-                throw new ArgumentOutOfRangeException(nameof(_operator), _operator, "不支持的操作符枚举值。");
-
-            this._operator = _operator;
-        }
+        protected KnownBindingCodeDomLogicalBinaryOperation(LogicalBinaryOperator _operator) : base(_operator) { }
     }
 
     public sealed class BindingCodeDomEqualityLogicalBinaryOperation : KnownBindingCodeDomLogicalBinaryOperation

@@ -6,37 +6,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Markup;
+using Yandere;
 
 namespace Launcher.Data.BindingCodeDom
 {
     [ContentProperty(nameof(BindingCodeDomPrimitiveValue.Value))]
     [TypeConverter(typeof(_TypeConverter))]
-    public sealed class BindingCodeDomPrimitiveValue : BindingCodeDomObject
+    public class BindingCodeDomPrimitiveValue : BindingCodeDomObject
     {
-        private bool hasValue = false;
-        public bool HasValue => this.hasValue;
+        protected bool isReadOnly = false;
 
-        private object value = null;
+        private ValueBox<object> valueBox = new ValueBox<object>();
+
+        public bool HasValue => this.valueBox.HasValue;
+        
         public object Value
         {
-            get
-            {
-                if (this.hasValue)
-                    return this.value;
-
-                throw new InvalidOperationException("未设置值。");
-            }
+            get => this.valueBox.Value;
             set
             {
-                this.value = value;
-                this.hasValue = true;
+                if (this.isReadOnly)
+                    throw new NotSupportedException("原始值为只读。");
+                else
+                    this.valueBox.Value = value;
             }
         }
 
         protected internal override void Execute(Stack<object> calculationStack, Dictionary<byte, object> localDictionary)
         {
-            if (this.hasValue)
-                calculationStack.Push(this.value);
+            if (this.HasValue)
+                calculationStack.Push(this.Value);
         }
 
         public class _TypeConverter : TypeConverter
@@ -46,6 +45,15 @@ namespace Launcher.Data.BindingCodeDom
 
             public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value) => new BindingCodeDomPrimitiveValue() { Value = value };
             public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType) => (value as BindingCodeDomPrimitiveValue).Value;
+        }
+    }
+
+    public abstract class BindingCodeDomConstValue<T> : BindingCodeDomPrimitiveValue
+    {
+        protected BindingCodeDomConstValue(T constValue)
+        {
+            this.Value = constValue;
+            base.isReadOnly = true;
         }
     }
 }

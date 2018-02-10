@@ -15,7 +15,18 @@ namespace Launcher.Controls
         /// 标识 <see cref="StretchHelper"/> 的 AspectRatio 附加属性。
         /// </summary>
         public static readonly DependencyProperty AspectRatioProperty =
-            DependencyProperty.RegisterAttached("AspectRatio", typeof(double), typeof(StretchHelper), new PropertyMetadata(double.NaN));
+            DependencyProperty.RegisterAttached(
+                "AspectRatio", typeof(double), typeof(StretchHelper),
+                new PropertyMetadata(double.NaN),
+                StretchHelper.AspectRatioValidateValue
+            );
+
+        private static bool AspectRatioValidateValue(object value) =>
+            // ① value 是 double 。
+            // ② aspectRatio 可以是 double.NaN 。
+            // ③ aspectRatio 不能是无限值。
+            // ④ aspectRatio 必须大于 0 。
+            (value is double aspectRatio) && (double.IsNaN(aspectRatio) || (!double.IsInfinity(aspectRatio) && aspectRatio > 0));
 
         /// <summary>
         /// 获取对象的  <see cref="StretchHelper"/> 的 AspectRatio 附加属性值。
@@ -71,7 +82,11 @@ namespace Launcher.Controls
 
         #region Width
         public static readonly DependencyProperty WidthProperty =
-            DependencyProperty.RegisterAttached("Width", typeof(double), typeof(StretchHelper), new PropertyMetadata(double.NaN));
+            DependencyProperty.RegisterAttached(
+                "Width", typeof(double), typeof(StretchHelper),
+                new PropertyMetadata(double.NaN),
+                StretchHelper.OnWidthOrHeightValidateValue
+            );
 
         public static double GetWidth(DependencyObject obj) =>
             (double)obj.GetValue(StretchHelper.WidthProperty);
@@ -82,7 +97,11 @@ namespace Launcher.Controls
 
         #region Height
         public static readonly DependencyProperty HeightProperty =
-            DependencyProperty.RegisterAttached("Height", typeof(double), typeof(StretchHelper), new PropertyMetadata(double.NaN));
+            DependencyProperty.RegisterAttached(
+                "Height", typeof(double), typeof(StretchHelper),
+                new PropertyMetadata(double.NaN),
+                StretchHelper.OnWidthOrHeightValidateValue
+            );
 
         public static double GetHeight(DependencyObject obj) =>
             (double)obj.GetValue(StretchHelper.HeightProperty);
@@ -91,11 +110,25 @@ namespace Launcher.Controls
             obj.SetValue(StretchHelper.HeightProperty, value);
         #endregion
 
+        private static bool OnWidthOrHeightValidateValue(object value)
+        {
+            if (value is double d)
+            {
+                if (double.IsNaN(d))
+                    return true;
+                else if (double.IsInfinity(d))
+                    return false;
+                else
+                    return d >= 0;
+            }
+            else return false;
+        }
+
         #region MinWidth
         public static readonly DependencyProperty MinWidthProperty =
             DependencyProperty.RegisterAttached(
                 "MinWidth", typeof(double), typeof(StretchHelper),
-                new PropertyMetadata(double.NaN,
+                new PropertyMetadata(0D,
                     null,
                     StretchHelper.OnMinWidthCoerceValue
                 ),
@@ -132,7 +165,7 @@ namespace Launcher.Controls
         public static readonly DependencyProperty MaxWidthProperty =
             DependencyProperty.RegisterAttached(
                 "MaxWidth", typeof(double), typeof(StretchHelper),
-                new PropertyMetadata(double.NaN,
+                new PropertyMetadata(double.PositiveInfinity,
                     null,
                     StretchHelper.OnMaxWidthCoerceValue
                 ),
@@ -163,7 +196,7 @@ namespace Launcher.Controls
         public static readonly DependencyProperty MinHeightProperty =
             DependencyProperty.RegisterAttached(
                 "MinHeight", typeof(double), typeof(StretchHelper),
-                new PropertyMetadata(double.NaN,
+                new PropertyMetadata(0D,
                     null,
                     StretchHelper.OnMinHeightCoerceValue
                 ),
@@ -200,7 +233,7 @@ namespace Launcher.Controls
         public static readonly DependencyProperty MaxHeightProperty =
             DependencyProperty.RegisterAttached(
                 "MaxHeight", typeof(double), typeof(StretchHelper),
-                new PropertyMetadata(double.NaN,
+                new PropertyMetadata(double.PositiveInfinity,
                     null,
                     StretchHelper.OnMaxHeightCoerceValue
                 ),

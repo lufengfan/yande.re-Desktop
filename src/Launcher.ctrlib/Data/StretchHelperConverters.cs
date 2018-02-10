@@ -18,9 +18,12 @@ namespace Launcher.Data
 
     public class StretchHelperConverter : IValueConverter, IMultiValueConverter
     {
-        private object ConvertInternal(
+        protected virtual object ConvertInternal(
             DependencyObject obj, StretchHelperDirection direction,
-            double width, double height, double actualWidth, double actualHeight
+            double width, double height,
+            double actualWidth, double actualHeight,
+            double minWidth, double maxWidth,
+            double minHeight, double maxHeight
         )
         {
             StretchMode mode = StretchHelper.GetStretchMode(obj);
@@ -41,6 +44,7 @@ namespace Launcher.Data
             }
             else
             {
+                // 计算时要考虑宽高比。
                 switch (mode)
                 {
                     case StretchMode.WidthOriented: // 以宽度为基准。
@@ -120,7 +124,14 @@ namespace Launcher.Data
                         else throw exception;
                     }
 
-                    return this.ConvertInternal(obj, direction, width, height, actualWidth, actualHeight);
+                    return this.ConvertInternal(
+                        obj,
+                        direction,
+                        width, height,
+                        actualWidth, actualHeight,
+                        minWidth, maxWidth,
+                        minHeight, maxHeight
+                    );
                 }
                 else throw exception;
             }
@@ -179,7 +190,14 @@ namespace Launcher.Data
                     }
                     else throw exception;
 
-                    return this.ConvertInternal(obj, direction, width, height, actualWidth, actualHeight);
+                    return this.ConvertInternal(
+                        obj,
+                        direction,
+                        width, height,
+                        actualWidth, actualHeight,
+                        minWidth, maxWidth,
+                        minHeight, maxHeight
+                    );
                 }
                 else throw exception;
             }

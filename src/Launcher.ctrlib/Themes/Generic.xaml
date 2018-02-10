@@ -419,4 +419,34 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style TargetType="{x:Type local:StatusInfo}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:StatusInfo}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Grid.Column="0"
+                                Width="{TemplateBinding IconWidth}" Height="{TemplateBinding IconHeight}"
+                                MinWidth="{TemplateBinding MinWidth}" MaxWidth="{TemplateBinding IconMaxWidth}"
+                                MinHeight="{TemplateBinding MaxHeight}" MaxHeight="{TemplateBinding IconMaxHeight}"
+                                Source="{TemplateBinding Icon}"
+                                VerticalAlignment="Center"/>
+                        <ContentPresenter Grid.Column="1"
+                                Content="{TemplateBinding Content}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Margin="{TemplateBinding Padding}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

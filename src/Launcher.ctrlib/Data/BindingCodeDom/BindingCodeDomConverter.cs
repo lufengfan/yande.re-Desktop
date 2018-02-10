@@ -14,16 +14,15 @@ namespace Launcher.Data.BindingCodeDom
         {
             if (parameter is BindingCodeDomConverterParameter param)
             {
-                object[] result = param?.CodeDom?.Execute(values);
-                return this.ProcessCodeDomExecutionResult(result, targetType, parameter, culture);
+                object[] result = param?.CodeDom?.Execute(this.BeforeCodeDomExecution(values, targetType, parameter, culture));
+                return this.AfterCodeDomExecution(result, targetType, parameter, culture);
             }
             else return System.Windows.DependencyProperty.UnsetValue;
         }
 
-        protected virtual object ProcessCodeDomExecutionResult(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            return values[0];
-        }
+        protected virtual object[] BeforeCodeDomExecution(object[] values, Type targetType, object parameter, CultureInfo culture) => values;
+
+        protected virtual object AfterCodeDomExecution(object[] values, Type targetType, object parameter, CultureInfo culture) => values[0];
 
         public virtual object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

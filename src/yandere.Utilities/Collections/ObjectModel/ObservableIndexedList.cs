@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Yandere.ComponentModel;
 
 namespace Yandere.Collections.ObjectModel
 {
+    [DebuggerDisplay("Count = {Count}")]
     public class ObservableIndexedList<T> : IList<ObservableIndexedListItem<T>>, IList<T>, IList, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private ObservableCollection<ObservableIndexedListItem<T>> collection;
@@ -44,24 +46,22 @@ namespace Yandere.Collections.ObjectModel
         object ICollection.SyncRoot => ((ICollection)this.collection).SyncRoot;
 
         bool ICollection.IsSynchronized => ((ICollection)this.collection).IsSynchronized;
-        
-        public event NotifyCollectionChangedEventHandler CollectionChanged
-        {
-            add => this.collection.CollectionChanged += value;
-            remove => this.collection.CollectionChanged -= value;
-        }
 
-        public event PropertyChangedEventHandler PropertyChanged
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        protected internal event PropertyChangedEventHandler PropertyChanged;
+        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
         {
-            add => ((INotifyPropertyChanged)this.collection).PropertyChanged += value;
-            remove => ((INotifyPropertyChanged)this.collection).PropertyChanged -= value;
+            add => this.PropertyChanged += value;
+            remove => this.PropertyChanged -= value;
         }
 
         public ObservableIndexedList()
         {
             this.collection = new ObservableCollection<ObservableIndexedListItem<T>>();
-
+            
             this.collection.CollectionChanged += this.Collection_CollectionChanged;
+            ((INotifyPropertyChanged)this.collection).PropertyChanged += (sender, e) => this.PropertyChanged?.Invoke(this, e);
         }
 
         public ObservableIndexedList(IEnumerable<T> collection) :
@@ -109,6 +109,8 @@ namespace Yandere.Collections.ObjectModel
             int i = 0;
             foreach (ObservableIndexedListItem<T> item in (IEnumerable<ObservableIndexedListItem<T>>)this)
                 item.Index = i++;
+
+            this.CollectionChanged?.Invoke(this, e);
         }
 
         private ObservableIndexedListItem<T> CheckValue(object value, Exception toThrow)
@@ -293,7 +295,7 @@ namespace Yandere.Collections.ObjectModel
         public ObservableIndexedListItem()
         {
             this.notifyPropertyChanged = new NotifyPropertyChanged(this);
-            this.valueBox = new ValueBox<T>();
+            this.valueBox = ValueBox<T>.NonValue;
         }
 
         public ObservableIndexedListItem(T value) : this() => this.valueBox.Value = value;

@@ -38,43 +38,39 @@ namespace Launcher
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            PostSearchProcess process = new PostSearchProcess();
+            var searchResult = process.Search();
+
+            this.PostThumbView.DataContext = searchResult;
             new System.Threading.Thread(() =>
             {
-                PostSearchProcess process = new PostSearchProcess();
-                var searchResult = process.Search();
-
-                this.Dispatcher.BeginInvoke(
-                    new Action<PostSearchResult>(arg =>
-                    {
-                        this.ItemsControl.DataContext = searchResult;
-                        arg.Load(); // 加载 5 个。
-                    }),
-                    searchResult
-                );
-
-                /*
-                int i = 0;
-                foreach (Lazy<YanderePostPreview> post in posts)
-                {
-                    async void addPostThumb(Lazy<YanderePostPreview> _post)
-                    {
-                        PostThumb thumb = new PostThumb()
-                        {
-                            Style = (Style)this.wp.Resources["VerticalOrientedPostThumbStyle"]
-                        };
-                        this.wp.Children.Add(thumb);
-
-                        Uri previewImageUri = await Task.Run(() => _post.Value.PreviewImageUri);
-                        thumb.ImageSource = new BitmapImage(previewImageUri);
-                    }
-                    this.Dispatcher.BeginInvoke(new Action<Lazy<YanderePostPreview>>(addPostThumb), post);
-                    i++;
-                    if (i == 5) break;
-                }
-                */
+                searchResult.Load(
+                    count: 30,
+                    dispatcher: this.Dispatcher
+                ); // 加载 30 个。
             })
-            { IsBackground = false }
-            .Start();
+            { IsBackground = true }
+                .Start();
+            /*
+            int i = 0;
+            foreach (Lazy<YanderePostPreview> post in posts)
+            {
+                async void addPostThumb(Lazy<YanderePostPreview> _post)
+                {
+                    PostThumb thumb = new PostThumb()
+                    {
+                        Style = (Style)this.wp.Resources["VerticalOrientedPostThumbStyle"]
+                    };
+                    this.wp.Children.Add(thumb);
+
+                    Uri previewImageUri = await Task.Run(() => _post.Value.PreviewImageUri);
+                    thumb.ImageSource = new BitmapImage(previewImageUri);
+                }
+                this.Dispatcher.BeginInvoke(new Action<Lazy<YanderePostPreview>>(addPostThumb), post);
+                i++;
+                if (i == 5) break;
+            }
+            */
         }
 
         private void MinimizeCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -104,6 +100,24 @@ namespace Launcher
 
             Color color = Color.FromArgb((byte)this.sA.Value, (byte)this.sR.Value, (byte)this.sG.Value, (byte)this.sB.Value);
             Application.Current.Resources[LauncherTheme.DropShadowColorKey] = color;
+        }
+
+        private void StatusInfo_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            PostSearchResult searchResult = this.PostThumbView.DataContext as PostSearchResult;
+            new System.Threading.Thread(() =>
+            {
+                if (searchResult.IsSearching) return;
+                else if (searchResult.IsAbort || searchResult.IsSearchComplete)
+                    searchResult.Update();
+
+                searchResult.Load(
+                    count: 30,
+                    dispatcher: this.Dispatcher
+                ); // 加载 30 个。
+            })
+            { IsBackground = true }
+                .Start();
         }
     }
 }

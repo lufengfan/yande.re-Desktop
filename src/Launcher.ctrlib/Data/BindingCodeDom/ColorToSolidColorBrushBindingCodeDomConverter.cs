@@ -12,7 +12,7 @@ namespace Launcher.Data.BindingCodeDom
     {
         public static readonly Dictionary<Color, SolidColorBrush> SolidColorBrushDictionary = new Dictionary<Color, SolidColorBrush>();
 
-        protected override object ProcessCodeDomExecutionResult(object[] values, Type targetType, object parameter, CultureInfo culture)
+        protected override object AfterCodeDomExecution(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             Color color = (Color)values[0];
             if (SolidColorBrushDictionary.ContainsKey(color))
