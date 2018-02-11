@@ -38,9 +38,11 @@ namespace Launcher
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            PostSearchProcess process = new PostSearchProcess();
+            PostSearchProcess process = new HtmlPostSearchProcess();
             var searchResult = process.Search();
 
+            this.NavigationFrame.Navigate(new Uri("/Pages/PostSearchResultPage.xaml", UriKind.Relative), searchResult);
+#if false
             this.PostThumbView.DataContext = searchResult;
             new System.Threading.Thread(() =>
             {
@@ -71,6 +73,7 @@ namespace Launcher
                 if (i == 5) break;
             }
             */
+#endif
         }
 
         private void MinimizeCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -102,22 +105,12 @@ namespace Launcher
             Application.Current.Resources[LauncherTheme.DropShadowColorKey] = color;
         }
 
-        private void StatusInfo_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void NavigationFrame_Navigated(object sender, NavigationEventArgs e)
         {
-            PostSearchResult searchResult = this.PostThumbView.DataContext as PostSearchResult;
-            new System.Threading.Thread(() =>
+            if (e.Content is FrameworkElement frameworkElement)
             {
-                if (searchResult.IsSearching) return;
-                else if (searchResult.IsAbort || searchResult.IsSearchComplete)
-                    searchResult.Update();
-
-                searchResult.Load(
-                    count: 30,
-                    dispatcher: this.Dispatcher
-                ); // 加载 30 个。
-            })
-            { IsBackground = true }
-                .Start();
+                frameworkElement.DataContext = e.ExtraData;
+            }
         }
     }
 }

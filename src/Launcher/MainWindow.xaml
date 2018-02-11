@@ -6,8 +6,6 @@
         xmlns:local="clr-namespace:Launcher"
         xmlns:ctrlib="clr-namespace:Launcher.Controls;assembly=Launcher.ctrlib"
         xmlns:converters="clr-namespace:Launcher.Data;assembly=Launcher.ctrlib"
-        xmlns:system="clr-namespace:System;assembly=mscorlib"
-        xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib"
         mc:Ignorable="d"
         Title="yande.re"
         AllowsTransparency="True"
@@ -18,8 +16,13 @@
         BorderBrush="{DynamicResource {x:Static local:LauncherTheme.BorderBrushKey}}" BorderThickness="1"
         BlurRadius="{DynamicResource {x:Static local:LauncherTheme.BlurRadiusKey}}" DropShadowColor="{DynamicResource {x:Static local:LauncherTheme.DropShadowColorKey}}"
         Loaded="Window_Loaded">
+    <ctrlib:DropShadowWindow.Resources>
+        <RoutedUICommand x:Key="WindowMinimizeCommand" Text="Minimize"/>
+        <RoutedUICommand x:Key="WindowMaximizeCommand" Text="Maximize"/>
+        <RoutedUICommand x:Key="WindowNormalCommand" Text="Normal"/>
+    </ctrlib:DropShadowWindow.Resources>
     <ctrlib:DropShadowWindow.Style>
-        <Style TargetType="ctrlib:DropShadowWindow">
+        <Style TargetType="{x:Type ctrlib:DropShadowWindow}">
             <Style.Triggers>
                 <Trigger Property="WindowState" Value="Maximized">
                     <Setter Property="Left" Value="0"/>
@@ -28,11 +31,6 @@
             </Style.Triggers>
         </Style>
     </ctrlib:DropShadowWindow.Style>
-    <ctrlib:DropShadowWindow.Resources>
-        <RoutedUICommand x:Key="WindowMinimizeCommand" Text="Minimize"/>
-        <RoutedUICommand x:Key="WindowMaximizeCommand" Text="Maximize"/>
-        <RoutedUICommand x:Key="WindowNormalCommand" Text="Normal"/>
-    </ctrlib:DropShadowWindow.Resources>
     <ctrlib:DropShadowWindow.CommandBindings>
         <CommandBinding Command="{StaticResource WindowMinimizeCommand}"
                 CanExecute="MinimizeCommand_CanExecute"
@@ -73,8 +71,8 @@
 
     <Grid Background="#FF2F2F2F">
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <Grid x:Name="WindowNonclientGrid" Grid.Row="0">
@@ -91,16 +89,16 @@
                     VerticalContentAlignment="Center"
                     Foreground="Gray" FontSize="16"
                     Content="{Binding Title, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
-                    ctrlib:CustomizedWindow.CustomizedWindowAncestor="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Mode=OneWay}"
+                    ctrlib:CustomizedWindow.CustomizedWindowAncestor="{Binding Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
                     ctrlib:CustomizedWindow.IsWindowTitleAreaPart="True"/>
 
             <StackPanel x:Name="WindowControlBoxPanel" Grid.Column="2"
                     Orientation="Horizontal"
                     VerticalAlignment="Top"
-                    ctrlib:CustomizedWindow.CustomizedWindowAncestor="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ctrlib:DropShadowWindow}, Mode=OneWay}"
+                    ctrlib:CustomizedWindow.CustomizedWindowAncestor="{Binding Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type ctrlib:DropShadowWindow}, Mode=FindAncestor}}"
                     ctrlib:CustomizedWindow.IsWindowTitleAreaPart="True">
                 <StackPanel.Resources>
-                    <Style TargetType="Button" x:Key="CommonControlBoxStyle">
+                    <Style TargetType="{x:Type Button}" x:Key="CommonControlBoxStyle">
                         <Setter Property="Width" Value="35"/>
                         <Setter Property="Height" Value="25"/>
                         <Setter Property="Background" Value="Transparent"/>
@@ -116,7 +114,7 @@
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter Property="Foreground" Value="White"/>
-                                <Setter Property="Background" Value="{Binding BorderBrush, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ctrlib:DropShadowWindow}}}"/>
+                                <Setter Property="Background" Value="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType={x:Type ctrlib:DropShadowWindow}, Mode=FindAncestor}}"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
@@ -136,12 +134,12 @@
                         Content="➕"
                         Command="{DynamicResource WindowMaximizeCommand}" Template="{DynamicResource WindowControlBoxControlTemplate}">
                     <Button.Style>
-                        <Style TargetType="Button" BasedOn="{StaticResource CommonControlBoxStyle}">
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource CommonControlBoxStyle}">
                             <Style.Triggers>
                                 <DataTrigger
                                         Binding="{Binding WindowState, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
                                         Value="Maximized">
-                                    <Setter Property="Button.Visibility" Value="Collapsed"/>
+                                    <Setter Property="Visibility" Value="Collapsed"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -151,13 +149,13 @@
                         Content="➗"
                         Command="{DynamicResource WindowNormalCommand}" Template="{DynamicResource WindowControlBoxControlTemplate}">
                     <Button.Style>
-                        <Style TargetType="Button" BasedOn="{StaticResource CommonControlBoxStyle}">
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource CommonControlBoxStyle}">
                             <Setter Property="Visibility" Value="Collapsed"/>
                             <Style.Triggers>
                                 <DataTrigger
                                         Binding="{Binding WindowState, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
                                         Value="Maximized">
-                                    <Setter Property="Button.Visibility" Value="Visible"/>
+                                    <Setter Property="Visibility" Value="Visible"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -174,206 +172,19 @@
             <!-- DropShadowWindow 发光颜色调节 -->
             <StackPanel Visibility="Collapsed">
                 <StackPanel.Resources>
-                    <Style TargetType="Slider">
+                    <Style TargetType="{x:Type Slider}">
                         <Setter Property="Maximum" Value="255"/>
                         <Setter Property="Margin" Value="20,10"/>
                     </Style>
                 </StackPanel.Resources>
-            
+
                 <Slider x:Name="sA" Value="255" ValueChanged="Slider_ValueChanged"/>
                 <Slider x:Name="sR" Value="255" ValueChanged="Slider_ValueChanged"/>
                 <Slider x:Name="sG" Value="255" ValueChanged="Slider_ValueChanged"/>
                 <Slider x:Name="sB" Value="255" ValueChanged="Slider_ValueChanged"/>
             </StackPanel>
 
-            <ctrlib:ItemsView x:Name="PostThumbView" 
-                    ItemsSource="{Binding PostPreviews}"
-                    ViewType="Grid">
-                <ctrlib:ItemsView.Template>
-                    <ControlTemplate>
-                        <ScrollViewer x:Name="ItemsScrollViewer"
-                                VerticalScrollBarVisibility="Auto">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-
-                                <ItemsPresenter Grid.Row="0"/>
-
-                                <ctrlib:StatusInfo x:Name="Status" Grid.Row="1"
-                                        HorizontalAlignment="Center"
-                                        Margin="0,10">
-                                    <ctrlib:StatusInfo.Resources>
-                                        <SolidColorBrush x:Key="ThemeColor_SolidColorBrush" Color="{DynamicResource {x:Static local:LauncherTheme.DropShadowColorKey}}"/>
-
-                                        <DrawingImage x:Key="SearchMore_Icon">
-                                            <DrawingImage.Drawing>
-                                                <GeometryDrawing
-                                                        Geometry="M990,904.5L760.3,677.2C815,607.1 847.8,519.4 847.8,424.2 847.8,195.7 659.9,9.70000000000005 428.9,9.70000000000005 197.9,9.7 10,195.6 10,424.2 10,652.8 197.9,838.7 428.9,838.7 519.5,838.7 603.4,810 672,761.5L903.3,990.4 990,904.5z M428.9,686.9C282.5,686.9 163.3,569.1 163.3,424.1 163.3,279.2 282.4,161.3 428.9,161.3 575.3,161.3 694.5,279.2 694.5,424.1 694.4,569.1 575.3,686.9 428.9,686.9z"
-                                                        Brush="{DynamicResource ThemeColor_SolidColorBrush}"/>
-                                            </DrawingImage.Drawing>
-                                        </DrawingImage>
-                                        <DrawingImage x:Key="Loading_Icon">
-                                            <DrawingImage.Drawing>
-                                                <GeometryDrawing
-                                                        Geometry="M497.7,8.9C233.3,8.9,19.1,222.6,10,486.4C19.1,259,192.3,72.5,406.6,72.5c218.8,0,396.6,191,396.6,427.5c0,50,41,91,95.7,91C949,591,990,550,990,500C990,231.7,771.2,8.9,502.3,8.9L497.7,8.9L497.7,8.9z M497.7,991.1c268.9,0,483.2-213.7,492.3-477.5C980.9,741,807.7,927.5,593.4,927.5c-218.8,0-396.6-191-396.6-427.5c0-50-41-91-95.7-91C51,409,10,450,10,500C10,768.3,228.8,991.1,497.7,991.1L497.7,991.1z"
-                                                        Brush="ForestGreen"/>
-                                            </DrawingImage.Drawing>
-                                        </DrawingImage>
-                                        <DrawingImage x:Key="Error_Icon">
-                                            <DrawingImage.Drawing>
-                                                <GeometryDrawing
-                                                            Geometry="M500,10C229.4,10 10,229.4 10,500 10,770.6 229.4,990 500,990 770.6,990 990,770.6 990,500 990,229.4 770.6,10 500,10L500,10 500,10z M582.5,173.2L558.9,636.1 440.7,636.1 417.1,173.2 582.5,173.2 582.5,173.2 582.5,173.2z M496.9,856.1C445.2,856.1 414.8,818.8 414.8,774 414.8,726 449.7,690.8 498,690.8 547.5,690.8 580.1,726 580.1,774 580.2,820.9 547.5,856.1 496.9,856.1L496.9,856.1 496.9,856.1z"
-                                                            Brush="IndianRed"/>
-                                            </DrawingImage.Drawing>
-                                        </DrawingImage>
-                                    </ctrlib:StatusInfo.Resources>
-                                    <ctrlib:StatusInfo.Style>
-                                        <Style TargetType="ctrlib:StatusInfo">
-                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                            <Setter Property="Foreground" Value="LightGray"/>
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                            <Setter Property="IconWidth" Value="21"/>
-                                            <Setter Property="IconHeight" Value="21"/>
-                                            <Setter Property="Icon" Value="{StaticResource SearchMore_Icon}"/>
-                                            <Setter Property="FontSize" Value="14"/>
-                                            <Setter Property="Padding" Value="8,0,0,0"/>
-                                            <Setter Property="Content" Value="加载更多"/>
-                                            <Setter Property="Cursor" Value="Hand"/>
-                                            <EventSetter Event="MouseLeftButtonDown" Handler="StatusInfo_MouseLeftButtonDown"/>
-
-                                            <Style.Triggers>
-                                                <DataTrigger
-                                                        Binding="{Binding DataContext.IsSearchComplete, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
-                                                        Value="True">
-                                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                                </DataTrigger>
-
-                                                <DataTrigger
-                                                        Binding="{Binding DataContext.IsAbort, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="True">
-                                                    <Setter Property="Icon" Value="{StaticResource Error_Icon}"/>
-                                                    <Setter Property="Content" Value="出错啦！重新加载"/>
-                                                    <Setter Property="Cursor" Value="Hand"/>
-                                                </DataTrigger>
-                                                
-                                                <MultiDataTrigger>
-                                                    <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding DataContext.IsSearching, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="True"/>
-                                                        <Condition Binding="{Binding DataContext.IsAbort, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}" Value="False"/>
-                                                    </MultiDataTrigger.Conditions>
-                                                    <Setter Property="Icon" Value="{StaticResource Loading_Icon}"/>
-                                                    <Setter Property="Content" Value="正在加载……"/>
-                                                    <Setter Property="Cursor" Value="ArrowCD"/>
-                                                </MultiDataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </ctrlib:StatusInfo.Style>
-                                </ctrlib:StatusInfo>
-                            </Grid>
-                        </ScrollViewer>
-                    </ControlTemplate>
-                </ctrlib:ItemsView.Template>
-
-                <!-- Grid 系列 -->
-                <ctrlib:ItemsView.GridItemsPanel>
-                    <ItemsPanelTemplate>
-                        <ctrlib:CustomizedGrid x:Name="ItemsDisplayGrid">
-                            <ctrlib:CustomizedGrid.Resources>
-                                <Style TargetType="ctrlib:PostThumb">
-                                    <Setter Property="Background" Value="#1FFFFFFF"/>
-                                    <Setter Property="MaxHeight" Value="160"/>
-                                    <Setter Property="Margin" Value="8,10"/>
-                                    <Setter Property="CornerRadius" Value="5"/>
-                                    <Setter Property="ctrlib:StretchHelper.StretchMode" Value="WidthOriented"/>
-                                    <Setter Property="ctrlib:StretchHelper.AspectRatio">
-                                        <Setter.Value>
-                                            <Binding Path="Value.Size">
-                                                <Binding.Converter>
-                                                    <converters:AspectRatioConverter/>
-                                                </Binding.Converter>
-                                            </Binding>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </ctrlib:CustomizedGrid.Resources>
-                            <ctrlib:CustomizedGrid.Style>
-                                <Style TargetType="ctrlib:CustomizedGrid">
-                                    <Setter Property="Margin" Value="8,0"/>
-                                    <Setter Property="RowCount">
-                                        <Setter.Value>
-                                            <MultiBinding>
-                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ctrlib:ItemsView}" Path="DataContext.PostPreviews.Count" Mode="OneWay"/>
-                                                <Binding RelativeSource="{RelativeSource Mode=Self}" Path="ColumnCount" Mode="OneWay"/>
-                                                <MultiBinding.Converter>
-                                                    <converters:CustomizedGridLogicalSizeConverter/>
-                                                </MultiBinding.Converter>
-                                            </MultiBinding>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Setter Property="RowDefinitionSelector">
-                                        <Setter.Value>
-                                            <ctrlib:RowDefinitionSelector>
-                                                <RowDefinition Height="Auto"/>
-                                            </ctrlib:RowDefinitionSelector>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Setter Property="ColumnCount" Value="5"/>
-                                </Style>
-                            </ctrlib:CustomizedGrid.Style>
-                        </ctrlib:CustomizedGrid>
-                    </ItemsPanelTemplate>
-                </ctrlib:ItemsView.GridItemsPanel>
-                <ctrlib:ItemsView.GridItemTemplate>
-                    <DataTemplate>
-                        <ctrlib:PostThumb ImageSource="{Binding Value.PreviewImageUri}">
-                            <Grid.Row>
-                                <MultiBinding>
-                                    <Binding RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
-                                    <!-- 第一个绑定值是为了设置 Grid.Row 的模版作用对象。 -->
-                                    <Binding Path="Index"/>
-                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ctrlib:CustomizedGrid}" Path="RowCount"/>
-                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ctrlib:CustomizedGrid}" Path="ColumnCount"/>
-                                    <MultiBinding.Converter>
-                                        <converters:CustomizedGridChildLocationConverter/>
-                                    </MultiBinding.Converter>
-                                    <MultiBinding.ConverterParameter>
-                                        <converters:CustomizedGridChildLocateDirection>Row</converters:CustomizedGridChildLocateDirection>
-                                    </MultiBinding.ConverterParameter>
-                                </MultiBinding>
-                            </Grid.Row>
-                            <Grid.Column>
-                                <MultiBinding>
-                                    <Binding RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
-                                    <!-- 第一个绑定值是为了设置 Grid.Column 的模版作用对象。 -->
-                                    <Binding Path="Index"/>
-                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ctrlib:CustomizedGrid}" Path="RowCount"/>
-                                    <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ctrlib:CustomizedGrid}" Path="ColumnCount"/>
-                                    <MultiBinding.Converter>
-                                        <converters:CustomizedGridChildLocationConverter/>
-                                    </MultiBinding.Converter>
-                                    <MultiBinding.ConverterParameter>
-                                        <converters:CustomizedGridChildLocateDirection>Column</converters:CustomizedGridChildLocateDirection>
-                                    </MultiBinding.ConverterParameter>
-                                </MultiBinding>
-                            </Grid.Column>
-                        </ctrlib:PostThumb>
-                    </DataTemplate>
-                </ctrlib:ItemsView.GridItemTemplate>
-
-                <!-- HorizontalWrap 系列 -->
-                <ctrlib:ItemsView.HorizontalWrapItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel x:Name="ItemsDisplayWrap"
-                                VerticalAlignment="Top"/>
-                    </ItemsPanelTemplate>
-                </ctrlib:ItemsView.HorizontalWrapItemsPanel>
-                <ctrlib:ItemsView.HorizontalWrapItemTemplate>
-                    <DataTemplate>
-                        <ctrlib:PostThumb ImageSource="{Binding Value.PreviewImageUri}"/>
-                    </DataTemplate>
-                </ctrlib:ItemsView.HorizontalWrapItemTemplate>
-            </ctrlib:ItemsView>
+            <Frame x:Name="NavigationFrame" Navigated="NavigationFrame_Navigated"/>
         </Grid>
     </Grid>
 </ctrlib:DropShadowWindow>

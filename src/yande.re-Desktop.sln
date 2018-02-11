@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launcher.ctrlib", "Launcher
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "yandere.Utilities", "yandere.Utilities\yandere.Utilities.csproj", "{30BE79E1-B797-4737-A2F9-25D96939E874}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8D6DF15D-DB29-427D-AECD-7AECD9286FC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YandereCoreTest", "tests\YandereCoreTest\YandereCoreTest.csproj", "{06F9FB63-664C-4AC6-B49A-0F74A250F8C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,9 +37,16 @@ Global
 		{30BE79E1-B797-4737-A2F9-25D96939E874}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30BE79E1-B797-4737-A2F9-25D96939E874}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30BE79E1-B797-4737-A2F9-25D96939E874}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06F9FB63-664C-4AC6-B49A-0F74A250F8C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06F9FB63-664C-4AC6-B49A-0F74A250F8C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06F9FB63-664C-4AC6-B49A-0F74A250F8C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06F9FB63-664C-4AC6-B49A-0F74A250F8C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{06F9FB63-664C-4AC6-B49A-0F74A250F8C6} = {8D6DF15D-DB29-427D-AECD-7AECD9286FC2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CA23C577-44AA-4044-ADEE-0D0756B49DB9}
