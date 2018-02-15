@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Yandere.Data
 {
-    public class YandereTagCollection : ICollection<YandereTag>
+    public class YandereTagCollection : ICollection<YandereTag>, IReadOnlyCollection<YandereTag>
     {
         private ISet<YandereTag> set;
 
@@ -34,10 +34,12 @@ namespace Yandere.Data
         public void CopyTo(YandereTag[] array, int arrayIndex) => this.set.CopyTo(array, arrayIndex);
 
         public IEnumerator<YandereTag> GetEnumerator() => this.set.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => this.set.GetEnumerator();
 
         public bool Remove(YandereTag item) =>
             this.set.Remove(item ?? throw new ArgumentNullException(nameof(item)));
 
-        IEnumerator IEnumerable.GetEnumerator() => this.set.GetEnumerator();
+        public override string ToString() =>
+            string.Join(" ", (IEnumerable<YandereTag>)this);
     }
 }

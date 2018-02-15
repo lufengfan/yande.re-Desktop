@@ -8,17 +8,16 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using Yandere.Data;
+using Yandere.Data.Html;
 
-namespace Yandere
+namespace Yandere.Html
 {
     [Obsolete]
     public class HtmlPostSearchProcess : PostSearchProcess
     {
-        protected internal override IEnumerable<YanderePostPreview> SearchInternal(params string[] tags)
+        protected internal override IEnumerable<YanderePostPreview> SearchInternal(YandereTagCollection tags)
         {
-            string tagStr;
-            if (tags == null) tagStr = string.Empty;
-            else tagStr = string.Join("+", tags);
+            string tagStr = tags.ToString();
             
             string url = @"https://yande.re/post";
             var queryDictionary = new Dictionary<string, object>();
@@ -69,7 +68,7 @@ namespace Yandere
                                     int.Parse(sizeMatch.Groups["x"].Value),
                                     int.Parse(sizeMatch.Groups["y"].Value)
                                 ),
-                                new Lazy<YanderePost>(() => YanderePost.GetPost(id))
+                                new Lazy<YanderePost>(() => HtmlYanderePost.GetPost(id))
                             );
                         }
                     }

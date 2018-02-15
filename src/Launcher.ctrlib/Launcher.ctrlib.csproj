@@ -56,6 +56,7 @@
     <Compile Include="Collections\ObjectModel\SpecificPartCollection.cs" />
     <Compile Include="Controls\ChamferPanel.cs" />
     <Compile Include="Controls\CustomizedGrid.cs" />
+    <Compile Include="Controls\SideBar.cs" />
     <Compile Include="Controls\StatusInfo.cs" />
     <Compile Include="Data\AspectRatioConverter.cs" />
     <Compile Include="Data\BindingCodeDom\BindingCodeDomRealBinaryOperation.cs" />

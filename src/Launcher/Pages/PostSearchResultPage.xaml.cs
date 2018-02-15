@@ -29,6 +29,7 @@ namespace Launcher.Pages
         private void StatusInfo_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             PostSearchResult searchResult = this.PostThumbView.DataContext as PostSearchResult;
+            return;
             new System.Threading.Thread(() =>
             {
                 if (searchResult.IsSearching) return;
@@ -48,6 +49,7 @@ namespace Launcher.Pages
         {
             if (e.NewValue is PostSearchResult searchResult)
             {
+                return;
                 new System.Threading.Thread(() =>
                 {
                     searchResult.Load(

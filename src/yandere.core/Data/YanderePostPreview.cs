@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Yandere.ComponentModel;
+using Yandere.Data.Html;
 
 namespace Yandere.Data
 {
@@ -61,7 +62,7 @@ namespace Yandere.Data
             get => this.post;
             protected internal set
             {
-                value = value?? new Lazy<YanderePost>(() => YanderePost.GetPost(this.ID));
+                value = value?? new Lazy<YanderePost>(() => HtmlYanderePost.GetPost(this.ID));
 
                 if (this.post != value)
                 {
@@ -78,7 +79,7 @@ namespace Yandere.Data
             this.ID = id;
             this.PreviewImageUri = previewImageUri ?? throw new ArgumentNullException(nameof(previewImageUri));
             this.Size = size;
-            this.Post = post ?? new Lazy<YanderePost>(() => YanderePost.GetPost(id));
+            this.Post = post ?? new Lazy<YanderePost>(() => Html.HtmlYanderePost.GetPost(id));
         }
 
         #region INotifyPropertyChanged Members

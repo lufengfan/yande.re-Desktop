@@ -38,7 +38,7 @@ namespace Launcher
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            PostSearchProcess process = new HtmlPostSearchProcess();
+            PostSearchProcess process = new Yandere.Json.JsonPostSearchProcess();
             var searchResult = process.Search();
 
             this.NavigationFrame.Navigate(new Uri("/Pages/PostSearchResultPage.xaml", UriKind.Relative), searchResult);

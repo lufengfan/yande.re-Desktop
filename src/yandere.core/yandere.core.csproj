@@ -51,9 +51,52 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Html\HtmlYanderePost.cs" />
+    <Compile Include="Json\JsonPostSearchProcess.cs" />
+    <Compile Include="Data\Json\JsonYandereAuthenticateAction.cs" />
+    <Compile Include="Data\Json\JsonYandereChangeStateActionResponse.cs" />
+    <Compile Include="Data\Json\JsonYandereDataFetchActionResponse.cs" />
+    <Compile Include="Data\Json\JsonYanderePost.cs" />
+    <Compile Include="Data\Json\JsonYanderePostCreateAction.cs" />
+    <Compile Include="Data\Json\JsonYanderePostDestroyAction.cs" />
+    <Compile Include="Data\Json\JsonYanderePostRevertTagsAction.cs" />
+    <Compile Include="Data\Json\JsonYanderePostsListAction.cs" />
+    <Compile Include="Data\Json\JsonYanderePostUpdateAction.cs" />
+    <Compile Include="Data\Json\JsonYanderePostVoteAction.cs" />
+    <Compile Include="Data\Json\JsonYandereTag.cs" />
     <Compile Include="Data\Json\post_json.cs" />
+    <Compile Include="Data\Json\response_json.cs" />
+    <Compile Include="Data\RawYandereTag.cs" />
+    <Compile Include="Data\StatusCode.cs" />
+    <Compile Include="Data\YandereAction.cs" />
+    <Compile Include="Data\YandereActionParameterProcessSeries.cs" />
+    <Compile Include="Data\YandereActionParameters.cs" />
+    <Compile Include="Data\YandereActionResponse.cs" />
+    <Compile Include="Data\YandereAction_Get.cs" />
+    <Compile Include="Data\YandereAction_Post.cs" />
+    <Compile Include="Data\YandereAuthenticateAction.cs" />
+    <Compile Include="Data\YandereChangeStateActionResponse.cs" />
+    <Compile Include="Data\YandereDataFetchActionResponse.cs" />
+    <Compile Include="Data\YandereLoggingInParameters.cs" />
+    <Compile Include="Data\YanderePostCreateAction.cs" />
+    <Compile Include="Data\YanderePostCreateActionParameters.cs" />
+    <Compile Include="Data\YanderePostDestroyAction.cs" />
+    <Compile Include="Data\YanderePostDestroyActionParameters.cs" />
     <Compile Include="Data\YanderePostPreview.cs" />
-    <Compile Include="JsonPostSearchProcess.cs" />
+    <Compile Include="Data\YanderePostRating.cs" />
+    <Compile Include="Data\YanderePostRevertTagsAction.cs" />
+    <Compile Include="Data\YanderePostRevertTagsActionParameters.cs" />
+    <Compile Include="Data\YanderePostsListAction.cs" />
+    <Compile Include="Data\YanderePostsListActionParameters.cs" />
+    <Compile Include="Data\YanderePostUpdateAction.cs" />
+    <Compile Include="Data\YanderePostUpdateActionParameters.cs" />
+    <Compile Include="Data\YanderePostVoteAction.cs" />
+    <Compile Include="Data\YanderePostVoteActionParameters.cs" />
+    <Compile Include="Data\YanderePostVoteScore.cs" />
+    <Compile Include="Data\YandereTagRelatedActionParameters.cs" />
+    <Compile Include="Data\YandereTagsListActionParameters.cs" />
+    <Compile Include="Data\YandereTagsListOrder.cs" />
+    <Compile Include="Data\YandereTagUpdateActionParameters.cs" />
     <Compile Include="PostSearchProcess.cs" />
     <Compile Include="PostSearchResult.cs" />
     <Compile Include="Threadings\ILoadingTask.cs" />
@@ -64,9 +107,10 @@
     <Compile Include="Data\YandereTag.cs" />
     <Compile Include="Data\YandereTagType.cs" />
     <Compile Include="ISearchProcess.cs" />
-    <Compile Include="HtmlPostSearchProcess.cs" />
+    <Compile Include="Html\HtmlPostSearchProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\YandereTagCollection.cs" />
+    <Compile Include="Data\YandereAuthenticateActionParameters.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -76,6 +120,9 @@
       <Project>{30be79e1-b797-4737-a2f9-25d96939e874}</Project>
       <Name>yandere.Utilities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\Xml\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

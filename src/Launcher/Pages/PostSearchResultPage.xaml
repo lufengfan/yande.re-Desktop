@@ -12,7 +12,7 @@
       Title="PostSearchResultPage">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="200"/>
+            <ColumnDefinition MinWidth="200" Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
@@ -98,7 +98,7 @@
                                                 </MultiDataTrigger.Conditions>
                                                 <Setter Property="Icon" Value="{StaticResource Loading_Icon}"/>
                                                 <Setter Property="Content" Value="正在加载……"/>
-                                                <Setter Property="Cursor" Value="ArrowCD"/>
+                                                <Setter Property="Cursor" Value="Wait"/>
                                             </MultiDataTrigger>
                                         </Style.Triggers>
                                     </Style>

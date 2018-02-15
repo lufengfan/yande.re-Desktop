@@ -449,4 +449,31 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="local:SideBar">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:SideBar">
+                    <Border
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Background="{TemplateBinding Background}">
+                        <DockPanel>
+                            <ContentPresenter x:Name="PART_Tip" 
+                                    DockPanel.Dock="{TemplateBinding TipDock}"
+                                    Content="{TemplateBinding Tip}">
+                                <ContentPresenter.Style>
+                                    <Style TargetType="ContentPresenter">
+                                        <Style.Triggers>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ContentPresenter.Style>
+                            </ContentPresenter>
+
+                            <ContentPresenter x:Name="PART_Content"/>
+                        </DockPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

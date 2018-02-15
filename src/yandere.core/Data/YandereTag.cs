@@ -25,6 +25,8 @@ namespace Yandere.Data
         /// </summary>
         public virtual YandereTagType TagType => this.tagType;
 
+        protected YandereTag() { }
+
         /// <summary>
         /// 初始化 <see cref="YandereTag"/> 类的新实例，此实例包含指定的标签的内容和类型。
         /// </summary>
@@ -64,6 +66,9 @@ namespace Yandere.Data
         /// <returns>该对象的哈希码。</returns>
         public override int GetHashCode() =>
             this.Value.GetHashCode() ^ this.TagType.GetHashCode();
+
+        public override string ToString() =>
+            System.Text.RegularExpressions.Regex.Replace(this.Value, @"\s+", "_");
 
 #pragma warning disable 1591
         public static bool operator ==(YandereTag left, YandereTag right) =>

@@ -12,7 +12,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Security;
+using Yandere;
+using Yandere.Data;
 using Yandere.Data.Json;
+using Yandere.Json;
 
 namespace YandereCoreTest
 {
@@ -20,12 +23,41 @@ namespace YandereCoreTest
     {
         static void Main(string[] args)
         {
+#if false
+            const string user = "";
+            const string pwd = "";
+            const string pass_hash = "";
+
+            SHA1 sha1 = new SHA1CryptoServiceProvider();
+            Func<string, byte[]> getBytes;
+            Func<byte[], string> getString;
+
+            string pwd_wrap = $"choujin-steiner--{pwd}--";
+            Encoding encoding = Encoding.UTF8;
+
+#if true
+            getBytes = encoding.GetBytes;
+            getString = bytes => BitConverter.ToString(bytes).Replace("-", string.Empty);
+#else
+            getBytes = encoding.GetBytes;
+            getString = encoding.GetString;
+#endif
+
+            string pwd_hash = getString(sha1.ComputeHash(getBytes(pwd_wrap)));
+
+            Console.WriteLine(pwd_hash);
+            Console.WriteLine(string.Equals(pwd_hash, pass_hash, StringComparison.InvariantCultureIgnoreCase));
+            ;
+            sha1.Clear();
+            ((IDisposable)sha1).Dispose();
+
             HttpClient client = new HttpClient();
-            
-            client.GetAsync(new Uri("https://yande.re/post.json?page=50&tags=cum"))
+
+            client.GetAsync(new Uri($"https://yande.re/post.json?page=50&tags=cum&login={user}&password_hash={pwd_hash}"))
                 .ContinueWith(task =>
                 {
                     var response = task.Result;
+                    var statusCode = task.Result.StatusCode;
                     response.Content.ReadAsStringAsync()
                         .ContinueWith(_task =>
                         {
@@ -35,32 +67,9 @@ namespace YandereCoreTest
 
                 });
 
-#if false
-            CookieContainer cookieContainer = new CookieContainer();
-            HttpWebRequest request = HttpWebRequest.CreateHttp(new Uri("https://yande.re/"));
-            request.Method = "GET";
-            request.CookieContainer = cookieContainer;
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-            CookieCollection cookies = cookieContainer.GetCookies(request.RequestUri);
-            response.Close();
-
-            cookieContainer.Add(request.RequestUri, new Cookie("login", ""));
-            cookieContainer.Add(request.RequestUri, new Cookie("pass_hash", ""));
-
-            request = HttpWebRequest.CreateHttp(new Uri("https://yande.re/user/home"));
-            request.Method = "GET";
-            request.CookieContainer = cookieContainer;
-            response = (HttpWebResponse)request.GetResponse();
-            using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
-            {
-                string source = reader.ReadToEnd();
-                ;
-            }
-
             string source = client.GetAsync(new Uri("https://yande.re/user/home")).Result.Content.ReadAsStringAsync().Result;
             ;
-            
+
             client.GetAsync(new Uri("https://yande.re/user/login"))
                 .ContinueWith(
                     task =>
@@ -87,19 +96,18 @@ namespace YandereCoreTest
                 .ContinueWith(
                     task =>
                     {
-                        const string userName = "";
-                        const string userPwd = "";
-
                         HttpContent _content = new FormUrlEncodedContent(
                             new Dictionary<string, string>()
                             {
-                                { "authenticity_token", task.Result.authenticity_token },
-                                { "url", task.Result.document.GetElementbyId("url").GetAttributeValue("value", string.Empty) },
-                                { "user[name]", userName },
-                                { "user[password]", userPwd }
+                                //{ "authenticity_token", task.Result.authenticity_token },
+                                //{ "url", task.Result.document.GetElementbyId("url").GetAttributeValue("value", string.Empty) },
+                                { "user[name]", user },
+#if true
+                                { "user[password]", pwd }
+#endif
                             }
                         );
-                        client.PostAsync("https://yande.re/user/authenticate", _content)
+                        client.PostAsync("https://yande.re/user/authenticate.json", _content)
                             .ContinueWith(
                                 _task =>
                                 {
@@ -119,6 +127,10 @@ namespace YandereCoreTest
                     }
                 );
 #endif
+            PostSearchProcess process = new JsonPostSearchProcess();
+            var posts = process.SearchInternal(new YandereTagCollection());
+            foreach (var post in posts)
+                ;
 
             Console.WriteLine("按任意键退出");
             Console.ReadKey(false);

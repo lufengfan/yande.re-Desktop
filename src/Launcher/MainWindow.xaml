@@ -86,11 +86,23 @@
                    Source="{Binding Icon, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"/>
 
             <Label x:Name="WindowTitleRect" Grid.Column="1"
-                    VerticalContentAlignment="Center"
-                    Foreground="Gray" FontSize="16"
+                    VerticalContentAlignment="Center" FontSize="16"
                     Content="{Binding Title, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"
                     ctrlib:CustomizedWindow.CustomizedWindowAncestor="{Binding Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}"
-                    ctrlib:CustomizedWindow.IsWindowTitleAreaPart="True"/>
+                    ctrlib:CustomizedWindow.IsWindowTitleAreaPart="True">
+                <Label.Style>
+                    <Style TargetType="Label">
+                        <Setter Property="Foreground" Value="LightGray"/>
+                        <Style.Triggers>
+                            <DataTrigger
+                                    Binding="{Binding IsActive, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"
+                                    Value="False">
+                                <Setter Property="Foreground" Value="Gray"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Style>
+            </Label>
 
             <StackPanel x:Name="WindowControlBoxPanel" Grid.Column="2"
                     Orientation="Horizontal"
@@ -169,8 +181,13 @@
         </Grid>
 
         <Grid x:Name="WindowClientGrid" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            
             <!-- DropShadowWindow 发光颜色调节 -->
-            <StackPanel Visibility="Collapsed">
+            <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Visibility="Collapsed">
                 <StackPanel.Resources>
                     <Style TargetType="{x:Type Slider}">
                         <Setter Property="Maximum" Value="255"/>
@@ -184,7 +201,50 @@
                 <Slider x:Name="sB" Value="255" ValueChanged="Slider_ValueChanged"/>
             </StackPanel>
 
-            <Frame x:Name="NavigationFrame" Navigated="NavigationFrame_Navigated"/>
+            <Expander x:Name="SideBar" Grid.Column="0"
+                    ExpandDirection="Right">
+
+                <Expander.Header>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="账户" Foreground="LightGray">
+                        <Label.LayoutTransform>
+                            <RotateTransform Angle="90"/>
+                        </Label.LayoutTransform>
+                    </Label>
+                </Expander.Header>
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid x:Name="UserProfileGrid" Width="240">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Image Grid.Row="0" MaxHeight="80" Margin="0,15,0,0">
+                            <Image.Resources>
+                                <DrawingImage x:Key="DefaultAvatarImageSource">
+                                    <DrawingImage.Drawing>
+                                        <GeometryDrawing
+                                                                Geometry="M500,10C229.4,10,10,229.4,10,500s219.4,490,490,490c270.6,0,490-219.4,490-490C990,229.4,770.6,10,500,10z M731.4,695.9c0,63.2-118.2,77.5-229.2,77.5c-110.8,0-230.5-14.4-230.5-77.5v-17.4c0-46.4,81.7-93.3,151.4-119.1c5-1.9,29.1-15.3,15.6-51.4c-34.5-36-60.6-94.4-60.6-151.9c0-88,56.9-134.1,123.5-134.1c66.5,0,123.7,46.1,123.7,134.1c0,57.2-26.2,115.4-60.5,151.5h0.2c-13.2,40.9,7.9,50.6,11.2,51.7c73.1,24.7,155.2,71.3,155.2,119.1V695.9z"
+                                                                Brush="White"/>
+                                    </DrawingImage.Drawing>
+                                </DrawingImage>
+                            </Image.Resources>
+                            <Image.Source>
+                                <PriorityBinding>
+                                    <Binding Path="Avatar" IsAsync="True"/>
+                                    <Binding Source="{StaticResource DefaultAvatarImageSource}"/>
+                                </PriorityBinding>
+                            </Image.Source>
+                        </Image>
+                        <Viewbox Grid.Row="1" Margin="25" MaxHeight="30">
+                            <TextBlock Text="{Binding Name}" Foreground="White"/>
+                        </Viewbox>
+                    </Grid>
+                </ScrollViewer>
+            </Expander>
+            
+            <Frame x:Name="NavigationFrame" Grid.Column="1"
+                    Navigated="NavigationFrame_Navigated"/>
         </Grid>
     </Grid>
 </ctrlib:DropShadowWindow>

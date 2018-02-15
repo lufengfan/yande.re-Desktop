@@ -14,35 +14,23 @@ namespace Yandere
     {
         public PostSearchResult Search()
         {
-            return new PostSearchResult(this.SearchInternal());
+            return new PostSearchResult(this.SearchInternal(new YandereTagCollection()));
         }
 
         public PostSearchResult Search(YandereTag condition)
         {
             if (condition == null) throw new ArgumentNullException(nameof(condition));
 
-            return new PostSearchResult(this.SearchInternal(HtmlPostSearchProcess.TagEscape(condition)));
+            return new PostSearchResult(this.SearchInternal(new YandereTagCollection { condition }));
         }
 
         public PostSearchResult Search(YandereTagCollection condition)
         {
             if (condition == null) throw new ArgumentNullException(nameof(condition));
 
-            return new PostSearchResult(
-                this.SearchInternal(
-                    condition.Select(tag => HtmlPostSearchProcess.TagEscape(tag))
-                        .ToArray()
-                )
-            );
+            return new PostSearchResult(this.SearchInternal(condition));
         }
-
-        public static string TagEscape(YandereTag tag)
-        {
-            if (tag == null) throw new ArgumentNullException(nameof(tag));
-
-            return Regex.Replace(tag.Value, @"\s", "_");
-        }
-
-        protected internal abstract IEnumerable<YanderePostPreview> SearchInternal(params string[] tags);
+        
+        protected internal abstract IEnumerable<YanderePostPreview> SearchInternal(YandereTagCollection tags);
     }
 }

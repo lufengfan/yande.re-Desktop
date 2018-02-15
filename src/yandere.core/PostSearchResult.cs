@@ -70,9 +70,12 @@ namespace Yandere
             this.Update();
         }
 
-        public void Update()
+        public void Update(Dispatcher dispatcher = null)
         {
-            this.collection.Clear();
+            dispatcher?.BeginInvoke((Action)delegate
+            {
+                this.collection.Clear();
+            });
             this.enumerator = this.previews.GetEnumerator();
             this.index = 0;
             this.isSearching = false;
