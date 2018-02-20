@@ -70,5 +70,15 @@ namespace Yandere.Data
         /// 获取或设置此图贴的图片大小。
         /// </summary>
         public Size Size { get; protected set; }
+
+        public static void UpdateCache(YanderePost post)
+        {
+            if (post == null) throw new ArgumentNullException(nameof(post));
+
+            if (YanderePost.PostsCache.ContainsKey(post.ID))
+                YanderePost.PostsCache[post.ID] = post;
+            else
+                YanderePost.PostsCache.Add(post.ID, post);
+        }
     }
 }

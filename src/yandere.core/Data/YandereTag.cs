@@ -11,7 +11,7 @@ namespace Yandere.Data
     /// 表示 Yandere 标签。
     /// </summary>
     [DebuggerDisplay("{Value}, TagType = {TagType}")]
-    public class YandereTag : IEquatable<YandereTag>
+    public class YandereTag : IEquatable<YandereTag>, IComparable<YandereTag>
     {
         private string value;
         /// <summary>
@@ -46,6 +46,8 @@ namespace Yandere.Data
             this.tagType = tagType;
         }
 
+        public virtual int CompareTo(YandereTag other) => this.ToString().CompareTo(other?.ToString());
+
         /// <summary>
         /// 确定指定的对象是否等于当前对象。
         /// </summary>
@@ -64,16 +66,38 @@ namespace Yandere.Data
         /// 返回该对象的哈希码。
         /// </summary>
         /// <returns>该对象的哈希码。</returns>
-        public override int GetHashCode() =>
-            this.Value.GetHashCode() ^ this.TagType.GetHashCode();
+        public override int GetHashCode() => this.Value.GetHashCode();
+
+        public static YandereTag Parse(string value)
+        {
+            if (value == null) throw new ArgumentNullException(nameof(value));
+
+#warning 未实现
+            return new RawYandereTag(value);
+        }
 
         public override string ToString() =>
             System.Text.RegularExpressions.Regex.Replace(this.Value, @"\s+", "_");
 
+        public static void UpdateCache(YandereTag tag)
+        {
+            if (tag == null) throw new ArgumentNullException(nameof(tag));
+
+            throw new NotImplementedException();
+        }
+
 #pragma warning disable 1591
         public static bool operator ==(YandereTag left, YandereTag right) =>
-            object.ReferenceEquals(left, right) || (left != null && left.Equals(right));
+            object.ReferenceEquals(left, right) || (!(left is null) && left.Equals(right));
         public static bool operator !=(YandereTag left, YandereTag right) => !(left == right);
+
+        public static implicit operator string(YandereTag tag)
+        {
+            if (tag == null)
+                return null;
+            else
+                return tag.ToString();
+        }
 #pragma warning restore 1591
     }
 }

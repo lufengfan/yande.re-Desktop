@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Security;
 using Yandere;
+using Yandere.Collections.ObjectModel;
 using Yandere.Data;
 using Yandere.Data.Json;
 using Yandere.Json;
@@ -127,6 +129,31 @@ namespace YandereCoreTest
                     }
                 );
 #endif
+
+            ObservableSortedDictionary<char, int> osd = new ObservableSortedDictionary<char, int>();
+            osd.CollectionChanged += (sender, e) =>
+            {
+                ;
+            };
+            osd.Add('c', 1);
+            osd.Add('a', 3);
+            osd['a']++;
+
+            ObservableCollection<object> oc = new ObservableCollection<object>();
+            oc.CollectionChanged += (sende, e) =>
+            {
+                ;
+            };
+            oc.Add(null);
+            oc[0] = "";
+            oc.Clear();
+            oc.Add(1);
+            oc.Insert(0, 2);
+            oc.Move(0, 1);
+            oc.RemoveAt(0);
+            oc.Remove(2);
+            
+
             PostSearchProcess process = new JsonPostSearchProcess();
             var posts = process.SearchInternal(new YandereTagCollection());
             foreach (var post in posts)

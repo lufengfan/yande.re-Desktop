@@ -26,6 +26,15 @@ namespace Yandere.Data
         public void Add(YandereTag item) => 
             this.set.Add(item ?? throw new ArgumentNullException(nameof(item)));
 
+        public void AddRange(IEnumerable<YandereTag> collection)
+        {
+            if (collection == null) throw new ArgumentNullException(nameof(collection));
+
+            foreach (var item in collection)
+                if (item != null)
+                    this.set.Add(item);
+        }
+        
         public void Clear() => this.set.Clear();
 
         public bool Contains(YandereTag item) =>
@@ -41,5 +50,29 @@ namespace Yandere.Data
 
         public override string ToString() =>
             string.Join(" ", (IEnumerable<YandereTag>)this);
+
+        public static YandereTagCollection Parse(string value)
+        {
+            YandereTagCollection collection = new YandereTagCollection();
+            foreach (var tag in value.Split().Where(v => !string.IsNullOrWhiteSpace(v)).Select(v => YandereTag.Parse(v)))
+                collection.Add(tag);
+
+            return collection;
+        }
+
+        public static bool TryParse(string value, out YandereTagCollection collection)
+        {
+            try
+            {
+                collection = YandereTagCollection.Parse(value);
+            }
+            catch (Exception)
+            {
+                collection = null;
+                return false;
+            }
+
+            return true;
+        }
     }
 }

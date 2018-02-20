@@ -55,6 +55,8 @@ namespace Yandere.Data
                 }
             }
         }
+        
+        public virtual YandereTagCollection Tags { get; protected internal set; }
 
         private Lazy<YanderePost> post;
         public virtual Lazy<YanderePost> Post
@@ -72,14 +74,15 @@ namespace Yandere.Data
             }
         }
 
-        public YanderePostPreview(uint id, Uri previewImageUri, Size size, Lazy<YanderePost> post = null)
+        public YanderePostPreview(uint id, Uri previewImageUri, Size size, YandereTagCollection tags, Lazy<YanderePost> post = null)
         {
             this.notifyPropertyChanged = new NotifyPropertyChanged(this);
 
             this.ID = id;
             this.PreviewImageUri = previewImageUri ?? throw new ArgumentNullException(nameof(previewImageUri));
             this.Size = size;
-            this.Post = post ?? new Lazy<YanderePost>(() => Html.HtmlYanderePost.GetPost(id));
+            this.Tags = tags ?? throw new ArgumentNullException(nameof(tags));
+            this.Post = post ?? new Lazy<YanderePost>(() => HtmlYanderePost.GetPost(id));
         }
 
         #region INotifyPropertyChanged Members

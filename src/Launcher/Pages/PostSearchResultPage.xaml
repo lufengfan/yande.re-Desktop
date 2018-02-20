@@ -16,6 +16,68 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <TextBox x:Name="txtSearchBox" Grid.Row="0" Text="azur_lane"
+                    KeyDown="txtSearchBox_KeyDown"/>
+
+            <ctrlib:ItemsView Grid.Row="1"
+                    ItemsSource="{Binding RelatedTags}"
+                    ViewType="Grid">
+                <ctrlib:ItemsView.Resources>
+                    <localpages:IsTagUsedConverter x:Key="IsTagUsedConverter"/>
+                </ctrlib:ItemsView.Resources>
+                
+                <ctrlib:ItemsView.Template>
+                    <ControlTemplate>
+                        <ScrollViewer x:Name="TagsScrollViewer"
+                                VerticalScrollBarVisibility="Auto">
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ctrlib:ItemsView.Template>
+
+                <!-- Grid 系列 -->
+                <ctrlib:ItemsView.GridItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel x:Name="TagsDisplay_Grid"/>
+                    </ItemsPanelTemplate>
+                </ctrlib:ItemsView.GridItemsPanel>
+                <ctrlib:ItemsView.GridItemTemplate>
+                    <DataTemplate>
+                        <ToggleButton HorizontalAlignment="Left">
+                            <ToggleButton.Resources>
+                                <localpages:IsTagUsedConverterParameter x:Key="IsTagUsedConverterParameter"
+                                                OriginalTags="{Binding Text, ElementName=txtSearchBox, Mode=OneWay}"
+                                                Tag="{Binding Key, Mode=OneWay}"
+                                                Other="{Binding Value}"/>
+                            </ToggleButton.Resources>
+                            
+                            <ToggleButton.IsChecked>
+                                <Binding ElementName="txtSearchBox" Path="Text"
+                                        Converter="{StaticResource IsTagUsedConverter}"
+                                        ConverterParameter="{StaticResource IsTagUsedConverterParameter}"/>
+                            </ToggleButton.IsChecked>
+                            <ToggleButton.Content>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} ({1})">
+                                            <Binding Path="Key"/>
+                                            <Binding Path="Value"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </ToggleButton.Content>
+                        </ToggleButton>
+                    </DataTemplate>
+                </ctrlib:ItemsView.GridItemTemplate>
+            </ctrlib:ItemsView>
+        </Grid>
+        
         <GridSplitter/>
 
         <ctrlib:ItemsView x:Name="PostThumbView" Grid.Column="1"
@@ -24,7 +86,7 @@
                 DataContextChanged="PostThumbView_DataContextChanged">
             <ctrlib:ItemsView.Template>
                 <ControlTemplate>
-                    <ScrollViewer x:Name="ItemsScrollViewer"
+                    <ScrollViewer x:Name="PostThumbsScrollViewer"
                                 VerticalScrollBarVisibility="Auto">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -112,7 +174,7 @@
             <!-- Grid 系列 -->
             <ctrlib:ItemsView.GridItemsPanel>
                 <ItemsPanelTemplate>
-                    <ctrlib:CustomizedGrid x:Name="ItemsDisplayGrid">
+                    <ctrlib:CustomizedGrid x:Name="PostThumbsDisplay_Grid">
                         <ctrlib:CustomizedGrid.Resources>
                             <Style TargetType="ctrlib:PostThumb">
                                 <Setter Property="Background" Value="#1FFFFFFF"/>
@@ -162,7 +224,22 @@
             </ctrlib:ItemsView.GridItemsPanel>
             <ctrlib:ItemsView.GridItemTemplate>
                 <DataTemplate>
-                    <ctrlib:PostThumb ImageSource="{Binding Value.PreviewImageUri}">
+                    <ctrlib:PostThumb>
+                        <ctrlib:PostThumb.Resources>
+                            <DrawingImage x:Key="LoadingImageSource">
+                                <DrawingImage.Drawing>
+                                    <GeometryDrawing Brush="#1FFFFFFF">
+                                        <GeometryDrawing.Geometry>
+                                            <GeometryGroup>
+                                                <PathGeometry Figures="M4390.3,4991.2c-2129.2-293.5-3772.7-1830.3-4205-3935.5c-34.7-176.1-58.7-418.9-69.4-736.4l-16-474.9h77.4c42.7,0,333.5,13.3,645.7,32l565.6,32v282.8c0,901.8,394.9,1833,1053.9,2494.7c1211.3,1208.7,3119,1403.4,4554.5,458.9c224.1-146.7,506.9-384.2,629.7-531l66.7-80l-368.2-368.2c-205.4-205.5-365.5-376.2-360.2-384.2c16-13.3,2782.8-629.7,2790.8-621.7c5.3,8-611,2777.5-621.7,2790.9c-5.3,8-125.4-104.1-269.5-245.5L8606,3446.4l-160.1,162.8c-637.7,651-1510.2,1115.3-2481.4,1320.7c-266.8,56-408.2,69.4-853.8,77.4C4817.2,5012.6,4494.4,5004.6,4390.3,4991.2z"/>
+                                                <PathGeometry Figures="M8611.3-160.9c-56.1-853.8-426.9-1656.9-1045.9-2275.9c-699-701.7-1566.2-1061.9-2561.4-1061.9c-760.4-2.7-1403.4,194.8-2030.4,619c-130.7,88.1-296.2,213.4-370.9,280.1l-133.4,120.1l346.9,346.9c189.4,192.1,338.9,349.5,328.2,349.5c-10.7,0-640.4,138.8-1398.1,306.8c-757.7,170.7-1387.4,306.8-1398.1,301.5c-16-8,581.6-2764.2,605.7-2796.2c5.3-5.4,144.1,122.7,309.5,285.5l298.8,296.2l258.8-221.4c1744.9-1480.8,4231.6-1574.2,6078-232.1c931.2,680.4,1627.6,1728.9,1881,2841.5C9841.3-731.9,9900-299.6,9900-94.2V84.6h-635h-637.7L8611.3-160.9z"/>
+                                            </GeometryGroup>
+                                        </GeometryDrawing.Geometry>
+                                    </GeometryDrawing>
+                                </DrawingImage.Drawing>
+                            </DrawingImage>
+                        </ctrlib:PostThumb.Resources>
+                        
                         <Grid.Row>
                             <MultiBinding>
                                 <Binding RelativeSource="{RelativeSource Mode=TemplatedParent}"/>
@@ -193,6 +270,12 @@
                                 </MultiBinding.ConverterParameter>
                             </MultiBinding>
                         </Grid.Column>
+                        <ctrlib:PostThumb.ImageSource>
+                            <PriorityBinding>
+                                <Binding Path="Value.PreviewImageUri" Mode="OneWay" IsAsync="True"/>
+                                <Binding Source="{StaticResource LoadingImageSource}" Mode="OneWay"/>
+                            </PriorityBinding>
+                        </ctrlib:PostThumb.ImageSource>
                     </ctrlib:PostThumb>
                 </DataTemplate>
             </ctrlib:ItemsView.GridItemTemplate>

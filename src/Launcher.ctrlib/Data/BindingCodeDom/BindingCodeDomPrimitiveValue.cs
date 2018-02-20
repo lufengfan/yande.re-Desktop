@@ -19,7 +19,7 @@ namespace Launcher.Data.BindingCodeDom
         private ValueBox<object> valueBox = new ValueBox<object>();
 
         public bool HasValue => this.valueBox.HasValue;
-        
+
         public object Value
         {
             get => this.valueBox.Value;
@@ -55,5 +55,10 @@ namespace Launcher.Data.BindingCodeDom
             this.Value = constValue;
             base.isReadOnly = true;
         }
+    }
+
+    public sealed class BindingCodeDomNullConstValue : BindingCodeDomConstValue<object>
+    {
+        protected BindingCodeDomNullConstValue() : base(null) { }
     }
 }

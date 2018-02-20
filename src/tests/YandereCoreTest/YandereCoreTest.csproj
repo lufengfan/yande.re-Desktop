@@ -63,6 +63,10 @@
       <Project>{e3c7f663-4279-427a-a5d2-e64c1b575783}</Project>
       <Name>yandere.core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\yandere.Utilities\yandere.Utilities.csproj">
+      <Project>{30BE79E1-B797-4737-A2F9-25D96939E874}</Project>
+      <Name>yandere.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

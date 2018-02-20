@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Yandere.Data.Json;
 
 namespace Yandere.Data
 {
@@ -25,6 +26,15 @@ namespace Yandere.Data
 
         public void Add(YanderePost item) =>
             this.set.Add(item ?? throw new ArgumentNullException(nameof(item)));
+
+        public void AddRange(IEnumerable<YanderePost> collection)
+        {
+            if (collection == null) throw new ArgumentNullException(nameof(collection));
+
+            foreach (var item in collection)
+                if (item != null)
+                    this.Add(item);
+        }
 
         public void Clear() => this.set.Clear();
 

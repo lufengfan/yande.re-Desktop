@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Yandere;
+using Yandere.Data;
 
 namespace Launcher.Pages
 {
@@ -29,7 +30,7 @@ namespace Launcher.Pages
         private void StatusInfo_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             PostSearchResult searchResult = this.PostThumbView.DataContext as PostSearchResult;
-            return;
+            
             new System.Threading.Thread(() =>
             {
                 if (searchResult.IsSearching) return;
@@ -49,7 +50,6 @@ namespace Launcher.Pages
         {
             if (e.NewValue is PostSearchResult searchResult)
             {
-                return;
                 new System.Threading.Thread(() =>
                 {
                     searchResult.Load(
@@ -59,6 +59,19 @@ namespace Launcher.Pages
                 })
                 { IsBackground = true }
                 .Start();
+            }
+        }
+
+        private void txtSearchBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (YandereTagCollection.TryParse(this.txtSearchBox.Text, out YandereTagCollection collection))
+                {
+                    PostSearchProcess process = new Yandere.Json.JsonPostSearchProcess();
+                    var searchResult = process.Search(collection);
+                    this.DataContext = searchResult;
+                }
             }
         }
     }

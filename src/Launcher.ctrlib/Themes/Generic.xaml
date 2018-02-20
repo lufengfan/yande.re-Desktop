@@ -14,7 +14,7 @@
                         <local:FilletPanel
                             Background="{TemplateBinding Background}"
                             CornerRadius="{TemplateBinding CornerRadius}">
-                            <Image Source="{TemplateBinding ImageSource}"></Image>
+                            <Image Source="{TemplateBinding ImageSource}"/>
                         </local:FilletPanel>
                     </Grid>
                 </ControlTemplate>

@@ -52,6 +52,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Html\HtmlYanderePost.cs" />
+    <Compile Include="Data\Json\account_json.cs" />
+    <Compile Include="Data\Json\comment_json.cs" />
+    <Compile Include="Data\YandereAccount.cs" />
+    <Compile Include="Data\YandereQualifierTag.cs" />
+    <Compile Include="Data\YandereSetAvatarAction.cs" />
+    <Compile Include="Data\YandereSetAvatarActionParameters.cs" />
     <Compile Include="Json\JsonPostSearchProcess.cs" />
     <Compile Include="Data\Json\JsonYandereAuthenticateAction.cs" />
     <Compile Include="Data\Json\JsonYandereChangeStateActionResponse.cs" />
@@ -99,6 +105,7 @@
     <Compile Include="Data\YandereTagUpdateActionParameters.cs" />
     <Compile Include="PostSearchProcess.cs" />
     <Compile Include="PostSearchResult.cs" />
+    <Compile Include="System.Collections.Generic\KeyUnuniqueException.cs" />
     <Compile Include="Threadings\ILoadingTask.cs" />
     <Compile Include="Threadings\LoadingTask.cs" />
     <Compile Include="Threadings\LoadingTaskPool.cs" />

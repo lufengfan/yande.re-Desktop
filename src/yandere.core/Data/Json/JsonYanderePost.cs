@@ -14,16 +14,35 @@ namespace Yandere.Data.Json
 
             this.ID = jObj.id;
 
-            string[] tagNames = jObj.tags.Split(' ');
-            foreach (var tagName in tagNames)
-                this.Tags.Add(JsonYandereTag.GetTag(tagName));
+            this.Tags.AddRange(YandereTagCollection.Parse(jObj.tags));
             
             if (jObj.parent_id.HasValue)
                 this.ParentPost = JsonYanderePost.GetPost(jObj.parent_id.Value);
             else
                 this.ParentPost = null;
 
-            this.HasChildren = jObj.has_children;
+            if (jObj.has_children)
+            {
+                var parameters = new YanderePostsListActionParameters()
+                {
+                    Limit = YanderePostsListActionParameters.MaxLimit,
+                    Tags = YandereTagCollection.Parse($"parent_id:{jObj.id}")
+                };
+                var action = new JsonYanderePostsListAction(parameters);
+                for (int page = 1; true; page++)
+                {
+                    parameters.Page = page;
+                    var response = action.DoAction();
+                    if (response.TryGetResponseValue(out object value) &&
+                        (value is post_json[] jObjs) &&
+                        (jObjs.Length > 0)
+                    )
+                        this.ChildPosts.AddRange(jObjs.Select(item => JsonYanderePost.GetPost(item)));
+                    else break;
+                }
+            }
+            else
+                this.HasChildren = jObj.has_children;
 
             this.PostTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)).AddMilliseconds(jObj.created_at);
             this.ImageUri = new Uri(jObj.jpeg_url, UriKind.Absolute);
@@ -37,11 +56,11 @@ namespace Yandere.Data.Json
         {
             if (!YanderePost.PostsCache.ContainsKey(id))
             {
-                YanderePost post = new Html.HtmlYanderePost(id);
+                YanderePost post = null;
                 var parameters = new YanderePostsListActionParameters()
                 {
                     Limit = YanderePostsListActionParameters.MaxLimit,
-                    Tags = post.Tags
+                    Tags = YandereTagCollection.Parse($"id:{id}")
                 };
                 var action = new JsonYanderePostsListAction(parameters);
                 for (int page = 1; true; page++)

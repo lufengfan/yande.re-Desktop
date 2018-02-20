@@ -43,13 +43,13 @@ namespace Yandere.Html
                 {
                     Regex postIDRegex = new Regex(@"^p(?<post_id>\d+?)$", RegexOptions.Compiled);
                     Regex sizeRegex = new Regex(@"^(?<x>\d+)\s+x\s+(?<y>\d+)$");
+                    Regex tagsRegex = new Regex(@"^yande.re\s+\d+\s*(?<Tags>(\s*\S+)*?)$");
                     foreach (HtmlNode listItem in postListNode.Elements("li"))
                     {
+                        Match postIDMatch = postIDRegex.Match(listItem.Id);
                         Uri previewImageUri = new Uri(
                             listItem.Element("div").Element("a").Element("img").GetAttributeValue("src", null)
                         );
-                        
-                        Match postIDMatch = postIDRegex.Match(listItem.Id);
                         Match sizeMatch = sizeRegex.Match(
                             listItem.Elements("a")
                                 .First(a =>
@@ -60,7 +60,15 @@ namespace Yandere.Html
                                 .InnerText
                                 .Trim()
                         );
-                        if (postIDMatch.Success && sizeMatch.Success)
+                        string img_url = listItem.Elements("a")
+                            .First(a =>
+                                a.HasClass("directlink")// && a.HasClass("largeimg")
+                            )
+                            .GetAttributeValue("href", string.Empty)
+                            .Trim();
+                        Match tagsMatch = tagsRegex.Match(HttpUtility.UrlDecode(System.IO.Path.GetFileNameWithoutExtension(img_url)));
+
+                        if (postIDMatch.Success && sizeMatch.Success && tagsMatch.Success)
                         {
                             uint id = uint.Parse(postIDMatch.Groups["post_id"].Value);
                             yield return new YanderePostPreview(id, previewImageUri,
@@ -68,6 +76,7 @@ namespace Yandere.Html
                                     int.Parse(sizeMatch.Groups["x"].Value),
                                     int.Parse(sizeMatch.Groups["y"].Value)
                                 ),
+                                YandereTagCollection.Parse(tagsMatch.Groups["Tags"].Value),
                                 new Lazy<YanderePost>(() => HtmlYanderePost.GetPost(id))
                             );
                         }

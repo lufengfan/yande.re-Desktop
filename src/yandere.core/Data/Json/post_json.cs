@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Yandere.Data.Json
 {
-    internal class post_json
+    internal sealed class post_json
     {
         public uint id { get; set; }
         public string tags { get; set; }
         public ulong created_at { get; set; }
         public ulong updated_at { get; set; }
-        public uint creator_id { get; set; }
+        public uint? creator_id { get; set; }
         public uint? approver_id { get; set; }
         public string author { get; set; }
         public int change { get; set; }

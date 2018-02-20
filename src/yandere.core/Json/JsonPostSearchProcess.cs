@@ -44,6 +44,7 @@ namespace Yandere.Json
                                 jObj.id,
                                 new Uri(jObj.preview_url, UriKind.Absolute),
                                 new Size(jObj.width, jObj.height),
+                                YandereTagCollection.Parse(jObj.tags),
                                 new Lazy<YanderePost>(() => JsonYanderePost.GetPost(jObj))
                             );
                     }

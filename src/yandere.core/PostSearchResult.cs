@@ -59,14 +59,63 @@ namespace Yandere
             }
         }
 
-        private ObservableIndexedList<YanderePostPreview> collection = new ObservableIndexedList<YanderePostPreview>();
-        public ObservableIndexedList<YanderePostPreview> PostPreviews => this.collection;
+        public ObservableIndexedList<YanderePostPreview> PostPreviews { get; } = new ObservableIndexedList<YanderePostPreview>();
+
+        public ObservableDictionary<YandereTag, int> RelatedTags { get; } = new ObservableDictionary<YandereTag, int>();
 
         public PostSearchResult(IEnumerable<YanderePostPreview> previews)
         {
             this.notifyPropertyChanged = new NotifyPropertyChanged(this);
 
             this.previews = previews ?? throw new ArgumentNullException(nameof(previews));
+            this.PostPreviews.CollectionChanged += (sender, e) =>
+            {
+                switch (e.Action)
+                {
+                    case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
+                        this.RelatedTags.Clear();
+                        break;
+                    case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
+                    case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                        if (e.OldItems != null)
+                        {
+                            foreach (ObservableCollectionItem<YanderePostPreview> item in e.OldItems)
+                            {
+                                foreach (var tag in item.Value.Tags)
+                                {
+                                    if (this.RelatedTags.TryGetValue(tag, out int count))
+                                    {
+                                        if (count <= 0)
+                                            this.RelatedTags.Remove(tag);
+                                        else
+                                            this.RelatedTags[tag]--;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (e.NewItems != null)
+                        {
+                            foreach (ObservableCollectionItem<YanderePostPreview> item in e.NewItems)
+                            {
+                                foreach (var tag in item.Value.Tags)
+                                {
+                                    if (this.RelatedTags.ContainsKey(tag))
+#if false
+                                        continue;
+#else
+                                        this.RelatedTags[tag]++;
+#endif
+                                    else
+                                        this.RelatedTags.Add(tag, 1);
+                                }
+                            }
+                        }
+                        break;
+                }
+            };
+
             this.Update();
         }
 
@@ -74,7 +123,8 @@ namespace Yandere
         {
             dispatcher?.BeginInvoke((Action)delegate
             {
-                this.collection.Clear();
+                this.RelatedTags.Clear();
+                this.PostPreviews.Clear();
             });
             this.enumerator = this.previews.GetEnumerator();
             this.index = 0;
@@ -117,7 +167,7 @@ namespace Yandere
                     dispatcher?.BeginInvoke(
                         (Action<int, YanderePostPreview>)((index, postPreview) =>
                         {
-                            this.collection.Insert(index, postPreview);
+                            this.PostPreviews.Insert(index, postPreview);
                         }),
                         this.index, this.enumerator.Current
                     );
@@ -132,7 +182,7 @@ namespace Yandere
         public event EventHandler SearchCompleted;
         public event EventHandler ErrorRaised;
 
-        #region INotifyPropertyChanged Members
+#region INotifyPropertyChanged Members
         private NotifyPropertyChanged notifyPropertyChanged;
         protected virtual NotifyPropertyChanged NotifyPropertyChanged => this.notifyPropertyChanged;
 
@@ -141,6 +191,6 @@ namespace Yandere
             add => this.NotifyPropertyChanged.PropertyChanged += value;
             remove => this.NotifyPropertyChanged.PropertyChanged -= value;
         }
-        #endregion
+#endregion
     }
 }
