@@ -45,7 +45,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\ObjectModel\ICountedCollection.cs" />
+    <Compile Include="Collections\ObjectModel\IItemCounts.cs" />
     <Compile Include="Collections\ObjectModel\ObservableCollectionItem.cs" />
+    <Compile Include="Collections\ObjectModel\ObservableCountedList.cs" />
     <Compile Include="Collections\ObjectModel\ObservableDictionary.cs" />
     <Compile Include="Collections\ObjectModel\ObservableSortedDictionary.cs" />
     <Compile Include="Collections\Specialized\INotifyDictionaryChanged.cs" />
@@ -55,6 +58,9 @@
     <Compile Include="ComponentModel\NotifyDictionaryChanged.cs" />
     <Compile Include="ComponentModel\NotifyPropertyChanged.cs" />
     <Compile Include="Collections\ObjectModel\ObservableIndexedList.cs" />
+    <Compile Include="System\Collections\Generic\IReadOnlyCollection.cs" />
+    <Compile Include="System\Collections\Generic\IReadOnlyDictionary.cs" />
+    <Compile Include="System\Linq\EnumerableEx.cs" />
     <Compile Include="ValueBox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

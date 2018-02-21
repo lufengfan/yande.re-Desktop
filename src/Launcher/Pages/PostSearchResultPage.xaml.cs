@@ -66,7 +66,7 @@ namespace Launcher.Pages
         {
             if (e.Key == Key.Enter)
             {
-                if (YandereTagCollection.TryParse(this.txtSearchBox.Text, out YandereTagCollection collection))
+                if (YandereTagCollection.TryParse(this.SearchBox.Text, out YandereTagCollection collection))
                 {
                     PostSearchProcess process = new Yandere.Json.JsonPostSearchProcess();
                     var searchResult = process.Search(collection);

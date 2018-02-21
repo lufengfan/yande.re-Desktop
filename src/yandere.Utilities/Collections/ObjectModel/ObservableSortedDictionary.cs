@@ -315,12 +315,14 @@ namespace Yandere.Collections.ObjectModel
             return true;
         }
 
-        public bool TryGetValue(TKey key, out TValue value)
+        public bool TryGetCount(TKey key, out TValue value)
         {
             bool result = this.innerDictionary.TryGetValue(key, out ObservableCollectionItem<TValue> item);
             value = item.Value;
             return result;
         }
+        bool IDictionary<TKey, TValue>.TryGetValue(TKey key, out TValue value) => this.TryGetCount(key, out value);
+        bool IReadOnlyDictionary<TKey, TValue>.TryGetValue(TKey key, out TValue value) => this.TryGetCount(key, out value);
 
         public class Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>, IDictionaryEnumerator
         {

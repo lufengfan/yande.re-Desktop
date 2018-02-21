@@ -22,11 +22,11 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <TextBox x:Name="txtSearchBox" Grid.Row="0" Text="azur_lane"
+            <ctrlib:PostSearchBox x:Name="SearchBox" Grid.Row="0" Text="azur_lane"
                     KeyDown="txtSearchBox_KeyDown"/>
 
             <ctrlib:ItemsView Grid.Row="1"
-                    ItemsSource="{Binding RelatedTags}"
+                    ItemsSource="{Binding RelatedTags.ItemCounts}"
                     ViewType="Grid">
                 <ctrlib:ItemsView.Resources>
                     <localpages:IsTagUsedConverter x:Key="IsTagUsedConverter"/>
@@ -53,21 +53,26 @@
                             <ToggleButton.Resources>
                                 <localpages:IsTagUsedConverterParameter x:Key="IsTagUsedConverterParameter"
                                                 OriginalTags="{Binding Text, ElementName=txtSearchBox, Mode=OneWay}"
-                                                Tag="{Binding Key, Mode=OneWay}"
+                                                Tag="{Binding Value, Mode=OneWay}"
                                                 Other="{Binding Value}"/>
                             </ToggleButton.Resources>
                             
                             <ToggleButton.IsChecked>
                                 <Binding ElementName="txtSearchBox" Path="Text"
-                                        Converter="{StaticResource IsTagUsedConverter}"
-                                        ConverterParameter="{StaticResource IsTagUsedConverterParameter}"/>
+                                        Converter="{StaticResource IsTagUsedConverter}">
+                                    <Binding.ConverterParameter>
+                                        <localpages:IsTagUsedConverterParameter
+                                                OriginalTags="{Binding Text, ElementName=txtSearchBox, Mode=OneWay}"
+                                                Tag="{Binding Value, Mode=OneWay}"/>
+                                    </Binding.ConverterParameter>
+                                </Binding>
                             </ToggleButton.IsChecked>
                             <ToggleButton.Content>
                                 <TextBlock>
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="{}{0} ({1})">
-                                            <Binding Path="Key"/>
                                             <Binding Path="Value"/>
+                                            <Binding Path="Count"/>
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
 using Yandere.Collections.ObjectModel;
 using Yandere.ComponentModel;
@@ -61,8 +62,8 @@ namespace Yandere
 
         public ObservableIndexedList<YanderePostPreview> PostPreviews { get; } = new ObservableIndexedList<YanderePostPreview>();
 
-        public ObservableDictionary<YandereTag, int> RelatedTags { get; } = new ObservableDictionary<YandereTag, int>();
-
+        public ObservableCountedList<YandereTag> RelatedTags { get; } = new ObservableCountedList<YandereTag>();
+        
         public PostSearchResult(IEnumerable<YanderePostPreview> previews)
         {
             this.notifyPropertyChanged = new NotifyPropertyChanged(this);
@@ -84,13 +85,7 @@ namespace Yandere
                             {
                                 foreach (var tag in item.Value.Tags)
                                 {
-                                    if (this.RelatedTags.TryGetValue(tag, out int count))
-                                    {
-                                        if (count <= 0)
-                                            this.RelatedTags.Remove(tag);
-                                        else
-                                            this.RelatedTags[tag]--;
-                                    }
+                                    this.RelatedTags.Remove(tag);
                                 }
                             }
                         }
@@ -101,14 +96,7 @@ namespace Yandere
                             {
                                 foreach (var tag in item.Value.Tags)
                                 {
-                                    if (this.RelatedTags.ContainsKey(tag))
-#if false
-                                        continue;
-#else
-                                        this.RelatedTags[tag]++;
-#endif
-                                    else
-                                        this.RelatedTags.Add(tag, 1);
+                                    this.RelatedTags.Add(tag);
                                 }
                             }
                         }

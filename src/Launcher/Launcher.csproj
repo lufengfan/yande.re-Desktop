@@ -69,6 +69,7 @@
     <Compile Include="Pages\PostSearchResultPage.xaml.cs">
       <DependentUpon>PostSearchResultPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\TestConverter.cs" />
     <Compile Include="ThemeResourceDictionary.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

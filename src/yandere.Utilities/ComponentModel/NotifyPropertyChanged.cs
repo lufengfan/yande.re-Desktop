@@ -11,8 +11,9 @@ namespace Yandere.ComponentModel
     public class NotifyPropertyChanged : INotifyPropertyChanged
     {
         private object sender;
+        protected object Sender => this.sender;
 
-        public NotifyPropertyChanged(object sender) =>
+        public NotifyPropertyChanged(object sender = null) =>
             this.sender = sender;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -23,6 +24,11 @@ namespace Yandere.ComponentModel
         public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this.sender, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public virtual void OnPropertyChangedOverrideSender(object sender, [CallerMemberName] string propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

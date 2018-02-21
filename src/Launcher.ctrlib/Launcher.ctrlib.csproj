@@ -56,6 +56,7 @@
     <Compile Include="Collections\ObjectModel\SpecificPartCollection.cs" />
     <Compile Include="Controls\ChamferPanel.cs" />
     <Compile Include="Controls\CustomizedGrid.cs" />
+    <Compile Include="Controls\PostSearchBox.cs" />
     <Compile Include="Controls\SideBar.cs" />
     <Compile Include="Controls\StatusInfo.cs" />
     <Compile Include="Data\AspectRatioConverter.cs" />
@@ -128,6 +129,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\yandere.core\yandere.core.csproj">
+      <Project>{E3C7F663-4279-427A-A5D2-E64C1B575783}</Project>
+      <Name>yandere.core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\yandere.Utilities\yandere.Utilities.csproj">
       <Project>{30be79e1-b797-4737-a2f9-25d96939e874}</Project>
       <Name>yandere.Utilities</Name>
